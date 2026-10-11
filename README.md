@@ -1,4 +1,4 @@
-# Aushrit — Hospital ERP website
+ # Aushrit — Hospital ERP website
 
 Marketing site for **Aushrit** (आश्रित), an AI-enabled, ABDM-ready hospital ERP.
 Built with React 18, Vite 5, Tailwind CSS 3, React Router and lucide-react icons.
