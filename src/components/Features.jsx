@@ -1,56 +1,302 @@
-import React from 'react'
-import { IdCard, ClipboardCheck, Bot, Mic, Lock, Zap, Plug, Cloud, WifiOff, PlayCircle, FileAudio } from 'lucide-react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
+import {
+  CalendarClock, BedDouble, HeartPulse, Mic, Sparkles, PlayCircle, IdCard, ClipboardCheck, Lock, Receipt, Pill,
+  BarChart3, WifiOff, Plug, CloudUpload, Check, ChevronLeft, ChevronRight, Users, ArrowRight,
+} from 'lucide-react'
 import SectionHeader from './SectionHeader'
 import RailHint from './RailHint'
 
+const CATEGORIES = ['Clinical care', 'Smart & AI', 'Compliance', 'Operations & finance', 'Platform']
+
 const FEATURES = [
-  { icon: FileAudio, title: 'Voice-enabled prescriptions', desc: 'Doctors dictate the prescription and Aushrit fills medicine, dose, frequency, duration and follow-up orders into the right fields, ready to review and sign.' },
-  { icon: Bot, title: 'AI patient summaries', desc: 'Visits, vitals, labs, prescriptions and allergies condensed into a short structured summary, so clinicians review records faster.' },
-  { icon: PlayCircle, title: 'Video guide for every module', desc: 'Chapter-by-chapter video walkthroughs for each role and screen, from registration to reports, so new staff get productive quickly.' },
-  { icon: IdCard, title: 'ABDM and ABHA interoperability', desc: 'ABHA creation and linking, Scan & Share, HIP care contexts, FHIR records, HIU consent workflows and traceable health-information exchange.' },
-  { icon: ClipboardCheck, title: 'NABH-aligned workflows', desc: 'Standard assessments, medication charts, OT safety checks, discharge records, digital signatures, audit trails and complete patient files.' },
-  { icon: Mic, title: 'Voice-to-text documentation', desc: 'Doctors and nurses dictate prescriptions, notes, vitals and clinical sections with real-time medical transcription.' },
-  { icon: Lock, title: 'Role-based access and audit', desc: 'Everyone gets exactly the access their job needs, with action-level permissions, signature checks, audit logs and document history.' },
-  { icon: Zap, title: 'Real-time department sync', desc: 'Prescriptions, orders, beds, results, medication tasks, stock, bills and clearances update across departments instantly.' },
-  { icon: Plug, title: 'Hospital device integrations', desc: 'Biometric attendance, lab analysers, imaging and PACS workflows, and external systems through configurable integrations and APIs.' },
-  { icon: Cloud, title: 'Cloud, on-premise and backups', desc: 'Cloud, on-premise or hybrid deployment with scheduled backups, restore help, backup health checks and continuity support.' },
-  { icon: WifiOff, title: 'Offline-ready operations', desc: 'Keep supported workflows running through internet drops, store work securely on the device, and sync once you are back online.' },
+  {
+    cat: 'Clinical care', icon: CalendarClock, title: 'OPD and smart queues', short: 'Walk-ins, appointments and tokens in one live queue.',
+    desc: 'Register patients, book and reschedule appointments, manage doctor availability and run token queues, with OPD billing connected to the same visit.',
+    points: ['Registration with ABHA linking', 'Doctor schedules and conflict checks', 'Token and queue management', 'Follow-ups and OPD billing'],
+    roles: ['Reception', 'Doctor'],
+  },
+  {
+    cat: 'Clinical care', icon: BedDouble, title: 'IPD and live bed board', short: 'Every ward, room and bed, visible in real time.',
+    desc: 'Run the full inpatient journey from admission and bed allocation through transfers, running bills and clearances to discharge and a digital patient file.',
+    points: ['Admission and bed allocation', 'Bed transfers and reservations', 'Running bill and clearances', 'Discharge summary and patient file'],
+    roles: ['Reception', 'Nurse', 'Admin'],
+  },
+  {
+    cat: 'Clinical care', icon: HeartPulse, title: 'Nursing and medication charts', short: 'Vitals, EWS and medication rounds without paper.',
+    desc: 'Give nurses their assigned patients, assessments, vitals with early-warning scores, medication administration records and structured shift handovers.',
+    points: ['Assigned patient lists', 'Vitals and EWS tracking', 'Medication administration records', 'Structured shift handover'],
+    roles: ['Nurse'],
+  },
+  {
+    cat: 'Smart & AI', icon: Mic, title: 'Voice-enabled prescriptions', short: 'Doctors speak. The prescription fills itself.',
+    desc: 'Doctors dictate in plain clinical language and Aushrit fills medicine, dose, frequency, duration and follow-up orders into the right fields, ready to review and sign.',
+    points: ['Medicine, dose, frequency and duration filled', 'Lab and follow-up orders extracted', 'Specialty template support', 'Doctor reviews before signing'],
+    roles: ['Doctor'],
+  },
+  {
+    cat: 'Smart & AI', icon: Sparkles, title: 'AI patient summaries', short: 'The full history, in a few lines.',
+    desc: 'AI reads visits, vitals, labs, prescriptions and allergies across the record and writes a short, structured summary, so clinicians walk in already briefed.',
+    points: ['Built from the longitudinal record', 'Allergies and critical values flagged', 'OPD, IPD and discharge summaries', 'Clinician reviews every summary'],
+    roles: ['Doctor', 'Nurse'],
+  },
+  {
+    cat: 'Smart & AI', icon: PlayCircle, title: 'Video guides for every module', short: 'Step-by-step videos for every role and screen.',
+    desc: 'Chapter-by-chapter video walkthroughs take each role through their screens, from registration to reports, so new staff learn on the job.',
+    points: ['Chapters for every module and role', 'Step captions to follow along', 'Open the guide from any screen', 'Faster onboarding and shift changes'],
+    roles: ['All staff'],
+  },
+  {
+    cat: 'Compliance', icon: IdCard, title: 'ABDM and ABHA, M1 to M3', short: 'Digital health IDs and consent-based record sharing.',
+    desc: 'Create and link ABHA, support Scan & Share at the front desk, link care contexts as a HIP, package FHIR records and run consent-based HIU exchange.',
+    points: ['ABHA creation, linking, card and QR', 'Facility Scan & Share', 'HIP care contexts and FHIR records', 'HIU consent-based exchange'],
+    roles: ['Reception', 'Admin'],
+  },
+  {
+    cat: 'Compliance', icon: ClipboardCheck, title: 'NABH-aligned documentation', short: 'Assessments, checklists and signatures, audit-ready.',
+    desc: 'Standardise doctor and nursing assessments, medication records, OT safety and discharge checklists, digital signatures and complete patient-file bundles.',
+    points: ['Doctor and nursing assessments', 'OT safety and discharge checklists', 'Digital signatures and verification', 'Complete patient-file PDF bundles'],
+    roles: ['Doctor', 'Nurse', 'Admin'],
+  },
+  {
+    cat: 'Compliance', icon: Lock, title: 'Role-based access and audit', short: 'Everyone sees exactly what their job needs.',
+    desc: 'Action-level permissions for every role, with signature checks, approval flows, audit logs and full document history.',
+    points: ['Role and action-level permissions', 'Audit logs and document history', 'Signature checks', 'Approval workflows'],
+    roles: ['Admin'],
+  },
+  {
+    cat: 'Operations & finance', icon: Receipt, title: 'Unified billing and insurance', short: 'Every charge, from every department, on one bill.',
+    desc: 'Centralise OPD, IPD, pharmacy, lab, radiology and OT billing with advances, refunds, payers, pre-authorisation and claims tracking.',
+    points: ['One invoice across departments', 'Advances, refunds and discounts', 'TPA pre-authorisation and claims', 'Financial dashboards and exports'],
+    roles: ['Reception', 'Admin'],
+  },
+  {
+    cat: 'Operations & finance', icon: Pill, title: 'Pharmacy, lab and inventory', short: 'Orders flow straight to dispensing and testing.',
+    desc: 'Prescriptions land in the pharmacy queue and lab orders in the worklist, while stock, batches, expiry and purchasing stay up to date on their own.',
+    points: ['Prescription queue and POS billing', 'Batch, expiry and low-stock alerts', 'Lab worklists with analyser results', 'Store, purchase orders and GRN'],
+    roles: ['Pharmacist', 'Lab technician', 'Store'],
+  },
+  {
+    cat: 'Operations & finance', icon: BarChart3, title: 'Reports and MIS dashboards', short: 'Live numbers for every department.',
+    desc: 'Real-time operational, clinical, inventory, workforce and financial reporting with configurable dashboards and scheduled exports.',
+    points: ['Executive and department dashboards', 'Revenue, OPD and IPD analytics', 'Inventory and HR reports', 'Scheduled exports'],
+    roles: ['Admin'],
+  },
+  {
+    cat: 'Platform', icon: WifiOff, title: 'Offline-ready operations', short: 'The hospital keeps working when the internet drops.',
+    desc: 'Supported workflows keep running through connectivity problems. Work is stored securely on the device and syncs automatically once you are back online.',
+    points: ['Registration, billing and pharmacy keep running', 'Work stored securely on the device', 'Automatic sync on reconnect', 'Made for patchy connectivity'],
+    roles: ['All staff'],
+  },
+  {
+    cat: 'Platform', icon: Plug, title: 'Device and system integrations', short: 'Data arrives from machines, not from typing.',
+    desc: 'Connect lab analysers, biometric attendance devices, radiology and PACS workflows, LIS and third-party systems through configurable integrations.',
+    points: ['Lab analysers and machines', 'Biometric attendance devices', 'Radiology and PACS support', 'LIS and third-party APIs'],
+    roles: ['Lab technician', 'HR', 'Admin'],
+  },
+  {
+    cat: 'Platform', icon: CloudUpload, title: 'Cloud, on-premise and backups', short: 'Deploy your way, with your data protected.',
+    desc: 'Run in the cloud, on-premise or hybrid, with scheduled automated backups, backup health monitoring and restore support.',
+    points: ['Cloud, on-premise or hybrid', 'Scheduled automated backups', 'Backup health monitoring', 'Restore and recovery support'],
+    roles: ['Admin'],
+  },
 ]
 
-const Features = () => (
-  <section id="features" className="relative overflow-hidden bg-pine-950 py-24 text-white sm:py-28">
-    <div className="glow-pine pointer-events-none absolute -left-40 top-0 h-[520px] w-[520px]" aria-hidden="true" />
-    <div className="glow-marigold pointer-events-none absolute -bottom-48 -right-32 h-[520px] w-[520px] opacity-60" aria-hidden="true" />
-    <div className="container-site relative">
-      <SectionHeader
-        dark
-        align="center"
-        eyebrow="Key features"
-        title="Built for digital, compliant, intelligent hospitals"
-        lead="Connected operations, ABDM interoperability, NABH-aligned records, AI and voice, secure integrations and your choice of deployment."
-      />
-      <ul className="reveal rail mt-10 gap-4 sm:mt-16 md:grid-cols-2 lg:grid-cols-3">
-        {FEATURES.map(({ icon: Icon, title, desc }, i) => (
-          <li
-            key={title}
-            className={`group relative overflow-hidden rounded-[24px] p-6 ring-1 transition-colors duration-300 sm:p-8 ${
-              i < 3 ? 'bg-gradient-to-br from-pine-800 to-pine-900 ring-white/15' : 'bg-white/[0.04] ring-white/10 hover:bg-white/[0.07]'
-            } ${i === 0 ? 'md:col-span-2' : ''}`}
-          >
-            <span className="grid h-12 w-12 place-items-center rounded-2xl bg-marigold-500/15 text-marigold-400 ring-1 ring-marigold-500/25 transition-colors group-hover:bg-marigold-500 group-hover:text-pine-950">
-              <Icon size={22} aria-hidden="true" />
-            </span>
-            <h3 className="mt-6 flex flex-wrap items-center gap-2 text-[19px] font-bold">
-              {title}
-              {i < 3 && <span className="rounded-full bg-marigold-500 px-2 py-0.5 font-body text-[10.5px] font-bold uppercase tracking-wider text-pine-950">Smart</span>}
-            </h3>
-            <p className="mt-2.5 max-w-[60ch] text-[15px] leading-relaxed text-white/65">{desc}</p>
-          </li>
-        ))}
-      </ul>
-      <RailHint dark />
-    </div>
-  </section>
-)
+const AUTOPLAY_MS = 6000
+
+const Features = () => {
+  const [cat, setCat] = useState('All')
+  const [active, setActive] = useState(0)
+  const [auto, setAuto] = useState(true)
+  const [hover, setHover] = useState(false)
+  const [inView, setInView] = useState(false)
+  const sectionRef = useRef(null)
+  const railRef = useRef(null)
+
+  const list = useMemo(() => (cat === 'All' ? FEATURES : FEATURES.filter((f) => f.cat === cat)), [cat])
+  const pos = Math.max(0, list.indexOf(FEATURES[active]))
+  const feature = list[pos]
+  const Icon = feature.icon
+  const playing = auto && !hover && inView
+
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) setAuto(false)
+    const io = new IntersectionObserver(([e]) => setInView(e.isIntersecting), { threshold: 0.2 })
+    if (sectionRef.current) io.observe(sectionRef.current)
+    return () => io.disconnect()
+  }, [])
+
+  // Autoplay walks through the visible features until someone picks one.
+  useEffect(() => {
+    if (!playing) return
+    const id = setTimeout(() => setActive(FEATURES.indexOf(list[(pos + 1) % list.length])), AUTOPLAY_MS)
+    return () => clearTimeout(id)
+  }, [playing, pos, list])
+
+  // On phones the tiles are a sideways row: keep the active one in view without scrolling the page.
+  useEffect(() => {
+    const rail = railRef.current
+    const tile = rail?.children[pos]
+    if (!rail || !tile || rail.scrollWidth <= rail.clientWidth) return
+    const offset = tile.getBoundingClientRect().left - rail.getBoundingClientRect().left
+    rail.scrollTo({ left: rail.scrollLeft + offset - parseFloat(getComputedStyle(rail).paddingLeft), behavior: 'smooth' })
+  }, [pos, cat])
+
+  const choose = (f) => {
+    setActive(FEATURES.indexOf(f))
+    setAuto(false)
+  }
+  const pickCat = (c) => {
+    setCat(c)
+    const first = c === 'All' ? FEATURES[0] : FEATURES.find((f) => f.cat === c)
+    setActive(FEATURES.indexOf(first))
+  }
+  const step = (d) => choose(list[(pos + d + list.length) % list.length])
+
+  return (
+    <section id="features" ref={sectionRef} className="relative overflow-hidden bg-pine-950 py-16 text-white sm:py-24 lg:py-28">
+      <div className="glow-pine pointer-events-none absolute -left-40 top-0 h-[520px] w-[520px]" aria-hidden="true" />
+      <div className="glow-marigold pointer-events-none absolute -bottom-48 -right-32 h-[520px] w-[520px] opacity-60" aria-hidden="true" />
+      <div className="container-site relative">
+        <SectionHeader
+          dark
+          align="center"
+          eyebrow="Core features"
+          title="The features that run your hospital"
+          lead="Fifteen capabilities that matter most, from the front desk to the boardroom. Pick one to see what it does and who uses it."
+        />
+
+        {/* Category filter */}
+        <div className="no-scrollbar -mx-5 mt-10 flex gap-2 overflow-x-auto px-5 sm:mx-0 sm:mt-12 sm:flex-wrap sm:justify-center sm:px-0" role="group" aria-label="Filter features by category">
+          {['All', ...CATEGORIES].map((c) => {
+            const on = c === cat
+            const count = c === 'All' ? FEATURES.length : FEATURES.filter((f) => f.cat === c).length
+            return (
+              <button
+                key={c}
+                type="button"
+                onClick={() => pickCat(c)}
+                aria-pressed={on}
+                className={`flex shrink-0 items-center gap-2 rounded-full px-4 py-2 text-[14px] font-semibold transition-all duration-300 ${
+                  on ? 'bg-marigold-500 text-pine-950 shadow-[0_8px_24px_-10px_rgba(242,163,58,.7)]' : 'bg-white/[0.05] text-white/75 ring-1 ring-white/10 hover:bg-white/10 hover:text-white'
+                }`}
+              >
+                {c}
+                <span className={`rounded-full px-1.5 text-[11.5px] font-bold ${on ? 'bg-pine-950/15' : 'bg-white/10'}`}>{count}</span>
+              </button>
+            )
+          })}
+        </div>
+
+        <div
+          className="mt-8 grid gap-6 sm:mt-10 lg:grid-cols-[1.1fr_1fr] lg:gap-8"
+          onMouseEnter={() => setHover(true)}
+          onMouseLeave={() => setHover(false)}
+        >
+          {/* Feature tiles */}
+          <div className="min-w-0">
+            <ul
+              key={cat}
+              ref={railRef}
+              className="no-scrollbar -mx-5 flex snap-x snap-mandatory scroll-px-5 gap-3 overflow-x-auto px-5 pb-1 sm:-mx-8 sm:scroll-px-8 sm:px-8 lg:mx-0 lg:grid lg:grid-cols-2 lg:overflow-visible lg:px-0 lg:pb-0"
+            >
+              {list.map((f, i) => {
+                const on = f === feature
+                const TIcon = f.icon
+                return (
+                  <li key={f.title} className="w-[72%] max-w-[280px] shrink-0 snap-start animate-rise lg:w-auto lg:max-w-none" style={{ animationDelay: `${i * 45}ms` }}>
+                    <button
+                      type="button"
+                      onClick={() => choose(f)}
+                      aria-pressed={on}
+                      className={`group relative flex h-full w-full flex-col overflow-hidden rounded-[20px] p-4 text-left transition-all duration-300 sm:p-5 ${
+                        on
+                          ? 'bg-white text-pine-950 shadow-[0_20px_50px_-24px_rgba(242,163,58,.55)]'
+                          : 'bg-white/[0.04] text-white ring-1 ring-white/10 hover:-translate-y-0.5 hover:bg-white/[0.08]'
+                      }`}
+                    >
+                      {on && <span className="absolute inset-y-0 left-0 w-1 bg-marigold-500" aria-hidden="true" />}
+                      <span className="flex items-center justify-between">
+                        <span className={`grid h-10 w-10 place-items-center rounded-xl transition-colors ${on ? 'bg-pine-900 text-marigold-400' : 'bg-marigold-500/15 text-marigold-400 group-hover:bg-marigold-500 group-hover:text-pine-950'}`}>
+                          <TIcon size={19} aria-hidden="true" />
+                        </span>
+                        <span className={`font-display text-[13px] font-bold ${on ? 'text-pine-300' : 'text-white/25'}`}>
+                          {String(FEATURES.indexOf(f) + 1).padStart(2, '0')}
+                        </span>
+                      </span>
+                      <span className="mt-4 block text-[15.5px] font-bold leading-snug">{f.title}</span>
+                      <span className={`mt-1 block text-[13px] leading-snug ${on ? 'text-ink/60' : 'text-white/55'}`}>{f.short}</span>
+                      {on && playing && (
+                        <span className="absolute inset-x-0 bottom-0 h-1 bg-pine-100" aria-hidden="true">
+                          <span key={`${f.title}-p`} className="block h-full bg-marigold-500" style={{ width: 0, animation: `grow ${AUTOPLAY_MS}ms linear forwards` }} />
+                        </span>
+                      )}
+                    </button>
+                  </li>
+                )
+              })}
+            </ul>
+            <RailHint dark label="Swipe for more features" />
+          </div>
+
+          {/* Spotlight */}
+          <div className="min-w-0 lg:sticky lg:top-28 lg:self-start">
+            <article className="relative overflow-hidden rounded-[28px] bg-gradient-to-br from-pine-800 to-pine-900 p-6 ring-1 ring-white/15 sm:p-9" aria-live="polite">
+              <div className="glow-marigold pointer-events-none absolute -right-24 -top-24 h-72 w-72" aria-hidden="true" />
+              <div key={feature.title} className="relative animate-fade-swap">
+                <div className="flex items-center justify-between gap-3">
+                  <span className="rounded-full bg-white/10 px-3 py-1 text-[12px] font-bold uppercase tracking-[0.12em] text-marigold-300">{feature.cat}</span>
+                  <span className="font-display text-[13px] font-bold tabular-nums text-white/50">
+                    {String(pos + 1).padStart(2, '0')} / {String(list.length).padStart(2, '0')}
+                  </span>
+                </div>
+
+                <span className="mt-7 grid h-16 w-16 animate-floaty place-items-center rounded-[20px] bg-marigold-500 text-pine-950 shadow-[0_18px_40px_-16px_rgba(242,163,58,.8)]">
+                  <Icon size={30} aria-hidden="true" />
+                </span>
+                <h3 className="mt-6 text-[clamp(24px,2.6vw,32px)] font-bold">{feature.title}</h3>
+                <p className="mt-3 text-[16px] leading-relaxed text-white/70">{feature.desc}</p>
+
+                <ul className="mt-7 grid gap-2.5 sm:grid-cols-2">
+                  {feature.points.map((p, i) => (
+                    <li key={p} className="flex animate-rise gap-2.5 rounded-2xl bg-white/[0.06] px-3.5 py-3 text-[14px] leading-snug text-white/90" style={{ animationDelay: `${120 + i * 70}ms` }}>
+                      <span className="mt-px grid h-5 w-5 shrink-0 place-items-center rounded-full bg-marigold-500/20 text-marigold-400">
+                        <Check size={12} strokeWidth={3} aria-hidden="true" />
+                      </span>
+                      {p}
+                    </li>
+                  ))}
+                </ul>
+
+                <div className="mt-7 flex flex-wrap items-center gap-2">
+                  <span className="flex items-center gap-1.5 text-[13px] font-semibold text-white/55">
+                    <Users size={15} aria-hidden="true" /> Used by
+                  </span>
+                  {feature.roles.map((r) => (
+                    <span key={r} className="rounded-full bg-white/10 px-2.5 py-1 text-[12.5px] font-medium text-white/85">{r}</span>
+                  ))}
+                </div>
+              </div>
+
+              <div className="relative mt-8 flex items-center justify-between gap-3 border-t border-white/10 pt-6">
+                <div className="flex gap-2">
+                  <button type="button" onClick={() => step(-1)} className="grid h-11 w-11 place-items-center rounded-full bg-white/[0.08] text-white ring-1 ring-white/10 transition-colors hover:bg-white/15" aria-label="Previous feature">
+                    <ChevronLeft size={20} />
+                  </button>
+                  <button type="button" onClick={() => step(1)} className="grid h-11 w-11 place-items-center rounded-full bg-white/[0.08] text-white ring-1 ring-white/10 transition-colors hover:bg-white/15" aria-label="Next feature">
+                    <ChevronRight size={20} />
+                  </button>
+                </div>
+                <Link to="/#contact" className="group inline-flex items-center gap-1.5 text-[14px] font-semibold text-marigold-300 hover:text-marigold-400">
+                  See it in a demo <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+                </Link>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
 
 export default Features

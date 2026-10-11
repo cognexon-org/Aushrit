@@ -1,58 +1,43 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Check, Plus, Minus, ChevronDown, CloudUpload, ArrowRight, Sparkles, Building } from 'lucide-react'
+import { Check, Plus, Minus, ChevronDown, ArrowRight, Sparkles, BedDouble, Plug, Users, Clock, Calculator } from 'lucide-react'
 import SectionHeader from './SectionHeader'
 import RailHint from './RailHint'
 
+const AMC_RATE = 0.2
+const INTEGRATION_RATE = 850 // ₹ per hour, per person
+
 const PLANS = [
   {
-    name: 'Basic OPD Clinic', badge: 'Launch offer', oldPrice: '₹25,000', price: '₹15,000', period: 'per year + GST',
-    desc: 'For small clinics and single-doctor OPDs that mainly need registration, appointments, consultation records and OPD billing.',
-    suitableFor: ['Small OPD clinics', 'Single-doctor clinics', 'Consultation centres', 'Daily registration and billing'],
-    included: ['ABDM M1: ABHA creation, linking, card and QR', 'OPD patient registration', 'Appointment management', 'Doctor consultation workflow', 'Digital prescription', 'Patient history', 'OPD billing', 'Basic reports', 'Admin dashboard'],
-    notIncluded: ['Pharmacy module', 'Pathology module', 'OT module', 'IPD bed management', 'Multi-department setup'],
-    cta: 'Start with Basic OPD',
-  },
-  {
-    name: 'Basic OPD Multi-Device', badge: 'Launch offer', oldPrice: '₹30,000', price: '₹20,000', period: 'per year + GST', popular: true,
-    desc: 'For clinics where the doctor, receptionist and billing desk each work on their own system.',
-    suitableFor: ['Clinics with a reception and a doctor desk', 'OPD centres using two or more devices', 'Faster front-desk and consultation coordination'],
-    included: ['ABDM M1: ABHA creation, linking, card and QR', 'OPD patient registration', 'Appointment scheduling', 'Doctor portal', 'Reception dashboard', 'Digital prescription', 'OPD billing', 'Patient history', 'Basic reports', 'Multi-device access'],
-    notIncluded: ['Pharmacy module', 'Pathology module', 'OT module', 'Full IPD management'],
-    cta: 'Start with Multi-Device',
-  },
-  {
-    name: 'Standard Hospital', oldPrice: '₹50,000', price: '₹35,000', period: 'per year + GST',
-    desc: 'For small and mid-size hospitals that need complete core operations plus digital compliance and clinical foundations.',
-    suitableFor: ['Multi-doctor hospitals', 'Nursing homes', 'Small multi-department hospitals', 'Hospitals with pharmacy and lab'],
+    beds: 'Less than 20 beds', range: [1, 19], price: 80000,
+    desc: 'For clinics, nursing homes and small hospitals moving OPD, IPD, pharmacy, lab and billing onto one record.',
+    suitableFor: ['Nursing homes', 'Multi-doctor clinics', 'Small hospitals with pharmacy and lab'],
     included: ['ABDM M1: ABHA creation, linking, card and QR', 'OPD, appointments and registration', 'IPD admission, ward, room and bed management', 'Doctor, nurse and registrar portals', 'Pharmacy and pathology', 'Billing, invoicing and revenue reports', 'Role-based access and audit logs', 'Longitudinal patient history', 'NABH-aligned core clinical and discharge records', 'Basic AI prescription and patient summaries', 'Weekly cloud backup and restore support', 'Cloud-ready and offline-ready workflows'],
     optional: ['OT and radiology modules', 'Voice-to-text prescriptions and dictation', 'Biometric attendance integration', 'Lab machine and analyser integration', 'Daily automated backup upgrade', 'Advanced MIS and insurance claims'],
-    cta: 'Choose Standard Hospital',
+    cta: 'Get started',
   },
   {
-    name: 'Advanced Hospital', badge: 'Smart hospital', oldPrice: '₹1,00,000', price: '₹50,000', period: 'per year + GST',
-    desc: 'For multi-specialty and larger hospitals that want full automation, AI workflows, connected devices and deeper ABDM exchange.',
-    suitableFor: ['Multi-specialty hospitals', 'Hospitals with OT and diagnostics', 'Multiple departments', 'Full digital transformation'],
-    included: ['ABDM M1: ABHA creation, linking, card and QR', 'ABDM M2: Scan & Share, HIP care contexts and FHIR exchange', 'Everything in Standard Hospital', 'Radiology and complete OT management', 'Store, procurement, inventory and assets', 'HR, attendance, salary and payroll', 'Insurance, TPA, pre-authorisation and claims', 'AI clinical assistant and structured summaries', 'Voice-to-text prescriptions, notes and dictation', 'NABH-aligned assessments, checklists, signatures and audit trails', 'Biometric attendance integration', 'Standard lab machine integration', 'Daily automated backups with health monitoring', 'Advanced operational and financial MIS'],
+    beds: '20–50 beds', range: [20, 50], price: 125000, popular: true,
+    desc: 'For growing and multi-specialty hospitals that want full automation, AI and voice, connected devices and deeper ABDM exchange.',
+    suitableFor: ['Multi-specialty hospitals', 'Hospitals with OT and diagnostics', 'Multiple departments'],
+    included: ['ABDM M1: ABHA creation, linking, card and QR', 'ABDM M2: Scan & Share, HIP care contexts and FHIR exchange', 'Everything in the under-20-beds plan', 'Radiology and complete OT management', 'Store, procurement, inventory and assets', 'HR, attendance, salary and payroll', 'Insurance, TPA, pre-authorisation and claims', 'AI clinical assistant and structured summaries', 'Voice-to-text prescriptions, notes and dictation', 'NABH-aligned assessments, checklists, signatures and audit trails', 'Biometric attendance integration', 'Standard lab machine integration', 'Daily automated backups with health monitoring', 'Advanced operational and financial MIS'],
     optional: ['ABDM M3 and HIU consent-based exchange', 'Additional lab, radiology, LIS or PACS integrations', 'Multi-branch control', 'Dedicated on-premise deployment', 'Custom specialty templates and reports'],
-    cta: 'Choose Advanced Hospital',
+    cta: 'Choose 20–50 beds',
+  },
+  {
+    beds: 'More than 50 beds', range: [51, 200], price: 200000,
+    desc: 'For large hospitals and groups that need full ABDM interoperability, custom AI, dedicated deployment and complex integrations.',
+    suitableFor: ['Large multi-specialty hospitals', 'Multi-branch networks', 'Dedicated deployment'],
+    included: ['ABDM M1, M2 and M3 with HIP and HIU consent workflows', 'Everything in the 20–50 beds plan', 'Custom AI clinical workflows, templates and summaries', 'Voice-to-text by specialty and role', 'Multi-branch dashboards and central governance', 'Multi-device biometric and lab machine integrations', 'Custom LIS, PACS, API and third-party integrations', 'Dedicated cloud, on-premise or hybrid deployment', 'Configurable retention, disaster recovery and restore help', 'Advanced security controls and audit retention', 'Custom modules, reports, permissions and approvals', 'Data migration, onboarding, staff training and priority support'],
+    cta: 'Choose 50+ beds',
   },
 ]
 
-const ENTERPRISE = {
-  name: 'Enterprise', price: 'Custom', period: 'quoted per network',
-  desc: 'For hospital groups and institutions that need full ABDM interoperability, custom AI, dedicated deployment and complex integrations.',
-  suitableFor: ['Hospital groups and multi-branch networks', 'Large multi-specialty hospitals', 'Complex clinical workflows', 'Dedicated deployment and integrations'],
-  included: ['ABDM M1, M2 and M3 with HIP and HIU consent workflows', 'Everything in Advanced Hospital', 'Custom AI clinical workflows, templates and summaries', 'Voice-to-text by specialty and role', 'Multi-branch dashboards and central governance', 'Multi-device biometric and lab machine integrations', 'Custom LIS, PACS, API and third-party integrations', 'Dedicated cloud, on-premise or hybrid deployment', 'Configurable retention, disaster recovery and restore help', 'Advanced security controls and audit retention', 'Custom modules, reports, permissions and approvals', 'Data migration, onboarding, staff training and priority support'],
-  cta: 'Talk to us about Enterprise',
-}
-
-const BACKUP = ['Daily automated cloud backup', 'Backup health checks', 'Encrypted offsite copy', 'Guided restore assistance', 'Configurable retention', 'Continuity and recovery review']
-
 const PREVIEW = 6
+const MAX_BEDS = 200
 
-const toNumber = (s) => Number(s.replace(/[^0-9]/g, ''))
-const savings = (p) => (p.oldPrice ? Math.round((1 - toNumber(p.price) / toNumber(p.oldPrice)) * 100) : 0)
+const inr = (n) => `₹${Math.round(n).toLocaleString('en-IN')}`
+const planFor = (beds) => (beds < 20 ? 0 : beds <= 50 ? 1 : 2)
 
 const List = ({ title, items, icon: Icon, dark, muted }) => (
   <div>
@@ -74,47 +59,51 @@ const List = ({ title, items, icon: Icon, dark, muted }) => (
   </div>
 )
 
-const PlanCard = ({ p, open, onToggle }) => {
+const PlanCard = ({ p, open, onToggle, selected, onSelect }) => {
   const dark = !!p.popular
-  const off = savings(p)
-  const hidden = p.included.length - PREVIEW + (p.optional?.length || 0) + (p.notIncluded?.length || 0)
+  const amc = p.price * AMC_RATE
+  const hidden = p.included.length - PREVIEW + (p.optional?.length || 0)
 
   return (
     <article
-      className={`relative flex flex-col rounded-[28px] p-6 transition-transform duration-300 sm:p-7 xl:p-8 ${
+      onClick={onSelect}
+      className={`relative flex cursor-pointer flex-col rounded-[28px] p-6 transition-all duration-300 sm:p-8 ${
         dark
-          ? 'bg-gradient-to-b from-pine-800 to-pine-950 text-white shadow-[0_40px_80px_-30px_rgba(6,32,28,.85)] ring-2 ring-marigold-500 xl:-translate-y-4'
-          : 'bg-white ring-1 ring-pine-100 hover:-translate-y-1 hover:shadow-[0_28px_60px_-32px_rgba(6,32,28,.35)]'
-      }`}
+          ? 'bg-gradient-to-b from-pine-800 to-pine-950 text-white shadow-[0_40px_80px_-30px_rgba(6,32,28,.85)]'
+          : 'bg-white hover:-translate-y-1 hover:shadow-[0_28px_60px_-32px_rgba(6,32,28,.35)]'
+      } ${selected ? 'ring-[3px] ring-marigold-500' : dark ? 'ring-1 ring-pine-700' : 'ring-1 ring-pine-100'}`}
     >
-      {dark && (
-        <span className="absolute inset-x-0 top-0 flex -translate-y-1/2 justify-center">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-marigold-500 px-4 py-1.5 text-[12.5px] font-bold text-pine-950 shadow-lg">
-            <Sparkles size={14} aria-hidden="true" /> Most popular
-          </span>
+      {(dark || selected) && (
+        <span className="absolute inset-x-0 top-0 flex -translate-y-1/2 justify-center gap-2">
+          {dark && (
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-marigold-500 px-3.5 py-1.5 text-[12px] font-bold text-pine-950 shadow-lg">
+              <Sparkles size={13} aria-hidden="true" /> Most popular
+            </span>
+          )}
+          {selected && (
+            <span className="inline-flex animate-fade-swap items-center gap-1.5 rounded-full bg-pine-950 px-3.5 py-1.5 text-[12px] font-bold text-marigold-300 shadow-lg ring-1 ring-marigold-500/50">
+              <BedDouble size={13} aria-hidden="true" /> Fits your hospital
+            </span>
+          )}
         </span>
       )}
 
-      <div className="flex items-start justify-between gap-3">
-        <h3 className={`text-[20px] font-bold ${dark ? 'text-white' : 'text-pine-950'}`}>{p.name}</h3>
-        {p.badge && (
-          <span className={`shrink-0 rounded-full px-2.5 py-1 text-[11.5px] font-bold ${dark ? 'bg-white/10 text-marigold-300' : 'bg-marigold-50 text-marigold-700 ring-1 ring-marigold-100'}`}>
-            {p.badge}
-          </span>
-        )}
+      <div className="flex items-center gap-3">
+        <span className={`grid h-11 w-11 place-items-center rounded-2xl ${dark ? 'bg-marigold-500 text-pine-950' : 'icon-chip'}`}>
+          <BedDouble size={20} aria-hidden="true" />
+        </span>
+        <h3 className={`text-[21px] font-bold ${dark ? 'text-white' : 'text-pine-950'}`}>{p.beds}</h3>
       </div>
 
-      <div className={`mt-6 rounded-2xl p-4 ${dark ? 'bg-white/[0.06]' : 'bg-paper'}`}>
-        <div className="flex flex-wrap items-center gap-2">
-          {p.oldPrice && <s className={`text-[14px] ${dark ? 'text-white/45' : 'text-ink/40'}`}>{p.oldPrice}</s>}
-          {off > 0 && (
-            <span className={`rounded-md px-1.5 py-0.5 text-[11.5px] font-bold ${dark ? 'bg-marigold-500 text-pine-950' : 'bg-pine-900 text-white'}`}>
-              Save {off}%
-            </span>
-          )}
+      <div className={`mt-6 rounded-2xl p-5 ${dark ? 'bg-white/[0.06]' : 'bg-paper'}`}>
+        <p className={`text-[12px] font-bold uppercase tracking-[0.12em] ${dark ? 'text-pine-200' : 'text-pine-600'}`}>One-time licence</p>
+        <p className="mt-1.5 font-display text-[44px] font-extrabold leading-none tracking-tight">{inr(p.price)}</p>
+        <div className={`mt-4 flex items-center justify-between gap-3 border-t pt-3.5 ${dark ? 'border-white/10' : 'border-pine-100'}`}>
+          <span className={`text-[13.5px] font-semibold ${dark ? 'text-white/85' : 'text-pine-900'}`}>+ 20% AMC</span>
+          <span className={`rounded-full px-2.5 py-1 text-[12.5px] font-bold ${dark ? 'bg-marigold-500 text-pine-950' : 'bg-pine-900 text-white'}`}>
+            {inr(amc)}/year
+          </span>
         </div>
-        <p className="mt-1.5 font-display text-[40px] font-extrabold leading-none tracking-tight">{p.price}</p>
-        <p className={`mt-1.5 text-[13px] ${dark ? 'text-white/60' : 'text-ink/55'}`}>{p.period}</p>
       </div>
 
       <p className={`mt-5 text-[14.5px] leading-relaxed ${dark ? 'text-white/75' : 'text-ink/70'}`}>{p.desc}</p>
@@ -125,20 +114,23 @@ const PlanCard = ({ p, open, onToggle }) => {
         ))}
       </ul>
 
-      <Link to="/#contact" className={`group mt-6 w-full whitespace-nowrap !px-4 !text-[14px] ${dark ? 'btn-primary' : 'btn-dark'}`}>
+      <Link
+        to="/#contact"
+        onClick={(e) => e.stopPropagation()}
+        className={`group mt-6 w-full whitespace-nowrap ${dark ? 'btn-primary' : 'btn-dark'}`}
+      >
         {p.cta} <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
       </Link>
 
       <div className={`mt-7 space-y-6 border-t pt-6 ${dark ? 'border-white/10' : 'border-pine-100'}`}>
         <List title="Included" items={open ? p.included : p.included.slice(0, PREVIEW)} icon={Check} dark={dark} />
         {open && p.optional && <List title="Optional add-ons" items={p.optional} icon={Plus} dark={dark} />}
-        {open && p.notIncluded && <List title="Not included" items={p.notIncluded} icon={Minus} dark={dark} muted />}
       </div>
 
       {hidden > 0 && (
         <button
           type="button"
-          onClick={onToggle}
+          onClick={(e) => { e.stopPropagation(); onToggle() }}
           aria-expanded={open}
           className={`mt-auto inline-flex items-center gap-1.5 self-start pt-6 text-[13.5px] font-semibold ${dark ? 'text-marigold-300 hover:text-marigold-400' : 'text-pine-700 hover:text-pine-950'}`}
         >
@@ -150,103 +142,173 @@ const PlanCard = ({ p, open, onToggle }) => {
   )
 }
 
+/** Slider that maps bed count to a plan. */
+const BedPicker = ({ beds, setBeds }) => {
+  const plan = PLANS[planFor(beds)]
+  const pct = ((beds - 1) / (MAX_BEDS - 1)) * 100
+
+  return (
+    <div className="mx-auto mt-10 max-w-[760px] rounded-[26px] bg-white p-5 ring-1 ring-pine-100 sm:p-7">
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <label htmlFor="bed-count" className="text-[15px] font-semibold text-pine-950">How many beds does your hospital have?</label>
+        <p className="font-display text-[30px] font-extrabold leading-none text-pine-950" aria-live="polite">
+          {beds >= MAX_BEDS ? `${MAX_BEDS}+` : beds}
+          <span className="ml-1.5 font-body text-[14px] font-medium text-ink/55">beds</span>
+        </p>
+      </div>
+      <input
+        id="bed-count"
+        type="range"
+        min={1}
+        max={MAX_BEDS}
+        value={beds}
+        onChange={(e) => setBeds(Number(e.target.value))}
+        className="mt-5 h-2.5 w-full cursor-pointer appearance-none rounded-full accent-marigold-500 [&::-moz-range-thumb]:h-6 [&::-moz-range-thumb]:w-6 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-4 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:bg-marigold-500 [&::-webkit-slider-thumb]:h-6 [&::-webkit-slider-thumb]:w-6 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-4 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:bg-marigold-500 [&::-webkit-slider-thumb]:shadow-[0_2px_10px_rgba(6,32,28,.35)]"
+        style={{ background: `linear-gradient(to right, #F2A33A ${pct}%, #DCEDE6 ${pct}%)` }}
+      />
+      <div className="relative mt-2 h-4 text-[11.5px] font-medium text-ink/45" aria-hidden="true">
+        {[1, 20, 50, 100, MAX_BEDS].map((v, i, all) => (
+          <span
+            key={v}
+            className={`absolute top-0 ${i === 0 ? '' : i === all.length - 1 ? '-translate-x-full' : '-translate-x-1/2'}`}
+            style={{ left: `${((v - 1) / (MAX_BEDS - 1)) * 100}%` }}
+          >
+            {v === MAX_BEDS ? `${v}+` : v}
+          </span>
+        ))}
+      </div>
+      <div key={plan.beds} className="mt-5 flex animate-fade-swap flex-wrap items-center justify-between gap-3 rounded-2xl bg-pine-950 px-5 py-4 text-white">
+        <span className="text-[14px] text-white/70">
+          Your plan: <strong className="font-semibold text-white">{plan.beds}</strong>
+        </span>
+        <span className="text-[14px]">
+          <strong className="font-display text-[20px] font-extrabold text-marigold-400">{inr(plan.price)}</strong>
+          <span className="text-white/60"> + {inr(plan.price * AMC_RATE)}/year AMC</span>
+        </span>
+      </div>
+    </div>
+  )
+}
+
+const Stepper = ({ id, label, icon: Icon, value, setValue, min, max, step = 1, unit }) => (
+  <div>
+    <label htmlFor={id} className="flex items-center gap-2 text-[13px] font-semibold text-white/75">
+      <Icon size={15} className="text-marigold-400" aria-hidden="true" /> {label}
+    </label>
+    <div className="mt-2 flex items-center rounded-2xl bg-white/[0.06] p-1.5 ring-1 ring-white/10">
+      <button type="button" onClick={() => setValue(Math.max(min, value - step))} className="grid h-10 w-10 place-items-center rounded-xl text-white transition-colors hover:bg-white/10" aria-label={`Fewer ${unit}`}>
+        <Minus size={16} />
+      </button>
+      <input
+        id={id}
+        type="number"
+        inputMode="numeric"
+        min={min}
+        max={max}
+        value={value}
+        onChange={(e) => setValue(Math.min(max, Math.max(min, Number(e.target.value) || min)))}
+        className="w-full min-w-0 bg-transparent text-center font-display text-[22px] font-bold text-white outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+      />
+      <button type="button" onClick={() => setValue(Math.min(max, value + step))} className="grid h-10 w-10 place-items-center rounded-xl text-white transition-colors hover:bg-white/10" aria-label={`More ${unit}`}>
+        <Plus size={16} />
+      </button>
+    </div>
+  </div>
+)
+
+/** Rate card plus a quick estimator for custom integration work. */
+const Integrations = () => {
+  const [people, setPeople] = useState(1)
+  const [hours, setHours] = useState(40)
+  const total = INTEGRATION_RATE * people * hours
+
+  return (
+    <article className="relative mt-10 overflow-hidden rounded-[28px] bg-pine-950 text-white sm:rounded-[32px]">
+      <div className="glow-marigold pointer-events-none absolute -right-40 -top-40 h-[460px] w-[460px]" aria-hidden="true" />
+      <div className="relative grid gap-8 p-6 sm:p-10 lg:grid-cols-[1fr_1.15fr] lg:gap-14">
+        <div>
+          <span className="grid h-12 w-12 place-items-center rounded-2xl bg-marigold-500 text-pine-950">
+            <Plug size={22} aria-hidden="true" />
+          </span>
+          <h3 className="mt-6 text-[clamp(22px,2.4vw,28px)] font-bold">Extra integration work</h3>
+          <p className="mt-3 max-w-[48ch] text-[15.5px] leading-relaxed text-white/70">
+            Custom connections beyond your plan, such as additional lab machines, LIS, PACS, third-party software or
+            bespoke APIs, are billed by the hour.
+          </p>
+          <p className="mt-7 font-display text-[48px] font-extrabold leading-none">
+            {inr(INTEGRATION_RATE)}
+            <span className="ml-1.5 font-body text-[16px] font-medium text-white/60">per hour, per person</span>
+          </p>
+        </div>
+
+        <div className="rounded-[24px] bg-white/[0.05] p-5 ring-1 ring-white/10 sm:p-7">
+          <p className="flex items-center gap-2 text-[12px] font-bold uppercase tracking-[0.14em] text-marigold-300">
+            <Calculator size={14} aria-hidden="true" /> Estimate the cost
+          </p>
+          <div className="mt-5 grid gap-4 sm:grid-cols-2">
+            <Stepper id="int-people" label="People on the work" icon={Users} value={people} setValue={setPeople} min={1} max={20} unit="people" />
+            <Stepper id="int-hours" label="Hours each" icon={Clock} value={hours} setValue={setHours} min={1} max={1000} step={8} unit="hours" />
+          </div>
+          <div className="mt-5 flex flex-wrap items-end justify-between gap-3 rounded-2xl bg-marigold-500 px-5 py-4 text-pine-950" aria-live="polite">
+            <span className="text-[13.5px] font-medium">
+              {inr(INTEGRATION_RATE)} × {people} {people === 1 ? 'person' : 'people'} × {hours} h
+            </span>
+            <span className="font-display text-[28px] font-extrabold leading-none">{inr(total)}</span>
+          </div>
+          <p className="mt-3 text-[12.5px] text-white/50">An estimate only. We confirm hours after reviewing the integration.</p>
+        </div>
+      </div>
+    </article>
+  )
+}
+
 const PricingPlans = () => {
   // One switch for every card, so the plans stay the same height whether collapsed or expanded.
   const [open, setOpen] = useState(false)
-  const toggle = () => setOpen((o) => !o)
+  const [beds, setBeds] = useState(30)
+  const selected = planFor(beds)
+  const railRef = useRef(null)
+
+  // On phones the plans are a sideways row: bring the matching plan into view as the slider moves.
+  useEffect(() => {
+    const rail = railRef.current
+    const card = rail?.children[selected]
+    if (!rail || !card || rail.scrollWidth <= rail.clientWidth) return
+    const offset = card.getBoundingClientRect().left - rail.getBoundingClientRect().left
+    rail.scrollTo({ left: rail.scrollLeft + offset - parseFloat(getComputedStyle(rail).paddingLeft), behavior: 'smooth' })
+  }, [selected])
+
+  const pickPlan = (i) => setBeds(Math.round((PLANS[i].range[0] + Math.min(PLANS[i].range[1], 100)) / 2))
 
   return (
-  <section id="pricing" className="relative overflow-hidden bg-paper py-16 sm:py-24 lg:py-28">
-    <div className="dot-paper pointer-events-none absolute inset-0 [mask-image:linear-gradient(to_bottom,black,transparent_40%)]" aria-hidden="true" />
-    <div className="relative mx-auto w-full max-w-[1480px] px-5 sm:px-8">
-      <SectionHeader
-        align="center"
-        eyebrow="Pricing"
-        title="Plans for clinics, smart hospitals and networks"
-        lead="Pick the level of automation, ABDM, AI, voice, device integration and backup you need now. Upgrade whenever the hospital grows."
-      />
+    <section id="pricing" className="relative overflow-hidden bg-paper py-16 sm:py-24 lg:py-28">
+      <div className="dot-paper pointer-events-none absolute inset-0 [mask-image:linear-gradient(to_bottom,black,transparent_40%)]" aria-hidden="true" />
+      <div className="relative mx-auto w-full max-w-[1320px] px-5 sm:px-8">
+        <SectionHeader
+          align="center"
+          eyebrow="Pricing"
+          title="Simple pricing, based on your bed count"
+          lead="Pick the plan that matches your hospital's size: a one-time licence plus 20% annual maintenance (AMC)."
+        />
 
-      <div className="mx-auto mt-8 flex max-w-max flex-wrap justify-center gap-x-5 gap-y-2 rounded-2xl bg-white px-5 py-2.5 sm:rounded-full text-[13.5px] text-ink/70 ring-1 ring-pine-100">
-        {['Annual billing', 'Launch pricing on all plans', 'Upgrade any time'].map((t) => (
-          <span key={t} className="flex items-center gap-1.5"><Check size={15} className="text-pine-500" aria-hidden="true" /> {t}</span>
-        ))}
+        <div className="mx-auto mt-8 flex max-w-max flex-wrap justify-center gap-x-5 gap-y-2 rounded-2xl bg-white px-5 py-2.5 text-[13.5px] text-ink/70 ring-1 ring-pine-100 sm:rounded-full">
+          {['One-time licence', '20% annual AMC', 'Priced by bed count', 'Prices exclude GST'].map((t) => (
+            <span key={t} className="flex items-center gap-1.5"><Check size={15} className="text-pine-500" aria-hidden="true" /> {t}</span>
+          ))}
+        </div>
+
+        <BedPicker beds={beds} setBeds={setBeds} />
+
+        <div ref={railRef} className="rail mt-12 gap-4 pt-5 sm:mt-16 md:gap-6 lg:grid-cols-3">
+          {PLANS.map((p, i) => (
+            <PlanCard key={p.beds} p={p} open={open} onToggle={() => setOpen((o) => !o)} selected={i === selected} onSelect={() => pickPlan(i)} />
+          ))}
+        </div>
+        <RailHint label="Swipe to compare plans" />
+
+        <Integrations />
       </div>
-
-      <div className="rail mt-8 gap-4 pt-5 sm:mt-12 md:grid-cols-2 md:gap-6 md:pt-4 xl:grid-cols-4">
-        {PLANS.map((p) => <PlanCard key={p.name} p={p} open={open} onToggle={toggle} />)}
-      </div>
-      <RailHint label="Swipe to compare plans" />
-
-      {/* Enterprise */}
-      <article className="relative mt-10 overflow-hidden rounded-[28px] bg-pine-950 text-white sm:mt-8 sm:rounded-[32px]">
-        <div className="glow-marigold pointer-events-none absolute -right-40 -top-40 h-[480px] w-[480px]" aria-hidden="true" />
-        <div className="relative grid gap-8 p-6 sm:gap-10 sm:p-12 lg:grid-cols-[1fr_1.4fr] lg:gap-16">
-          <div className="flex flex-col">
-            <span className="icon-chip h-14 w-14">
-              <Building size={26} aria-hidden="true" />
-            </span>
-            <h3 className="mt-6 text-[28px] font-bold">{ENTERPRISE.name}</h3>
-            <p className="mt-3 max-w-[46ch] text-[15.5px] leading-relaxed text-white/70">{ENTERPRISE.desc}</p>
-            <ul className="mt-5 flex flex-wrap gap-1.5" aria-label="Suitable for">
-              {ENTERPRISE.suitableFor.map((s) => (
-                <li key={s} className="rounded-full bg-white/[0.08] px-2.5 py-1 text-[12px] font-medium text-white/80">{s}</li>
-              ))}
-            </ul>
-            <div className="mt-8 flex flex-wrap items-end gap-x-6 gap-y-5 lg:mt-auto lg:pt-10">
-              <div>
-                <p className="font-display text-[44px] font-extrabold leading-none">{ENTERPRISE.price}</p>
-                <p className="mt-1.5 text-[13.5px] text-white/55">{ENTERPRISE.period}</p>
-              </div>
-              <Link to="/#contact" className="btn-primary group w-full sm:w-auto">
-                {ENTERPRISE.cta} <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
-              </Link>
-            </div>
-          </div>
-          <div className="rounded-[20px] bg-white/[0.04] p-5 ring-1 ring-white/10 sm:rounded-[24px] sm:p-8">
-            <h4 className="font-body text-[12px] font-bold uppercase tracking-[0.12em] text-pine-200">Included</h4>
-            <ul className="mt-4 grid gap-x-6 gap-y-3 sm:grid-cols-2">
-              {ENTERPRISE.included.map((it) => (
-                <li key={it} className="flex gap-2.5 text-[14px] leading-snug text-white/85">
-                  <span className="mt-px grid h-[18px] w-[18px] shrink-0 place-items-center rounded-full bg-marigold-500/20 text-marigold-400">
-                    <Check size={12} strokeWidth={3} aria-hidden="true" />
-                  </span>
-                  {it}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </article>
-
-      {/* Backup add-on */}
-      <aside className="mt-6 grid items-center gap-6 rounded-[28px] bg-white p-6 ring-1 ring-pine-100 sm:mt-8 sm:gap-8 sm:rounded-[32px] sm:p-10 lg:grid-cols-[auto_1fr_auto] lg:gap-12">
-        <span className="grid h-16 w-16 place-items-center rounded-2xl bg-marigold-50 text-marigold-700 ring-1 ring-marigold-100">
-          <CloudUpload size={30} aria-hidden="true" />
-        </span>
-        <div>
-          <p className="text-[12px] font-bold uppercase tracking-[0.12em] text-marigold-700">Add-on</p>
-          <h3 className="mt-1.5 text-[clamp(22px,2.4vw,28px)] font-bold text-pine-950">Enhanced backup and disaster recovery</h3>
-          <p className="mt-2 max-w-[60ch] text-[15px] leading-relaxed text-ink/70">
-            For clinic and Standard plans: more frequent automated backups, an encrypted offsite copy, backup
-            monitoring and guided recovery.
-          </p>
-          <ul className="mt-5 flex flex-wrap gap-2">
-            {BACKUP.map((t) => (
-              <li key={t} className="flex items-center gap-1.5 rounded-full bg-paper px-3 py-1.5 text-[13px] text-ink/80 ring-1 ring-pine-100">
-                <Check size={14} className="text-pine-500" aria-hidden="true" /> {t}
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div className="rounded-[24px] bg-paper p-6 text-center lg:min-w-[220px]">
-          <p className="font-display text-[40px] font-extrabold leading-none text-pine-950">
-            ₹5,000<span className="ml-1 text-[16px] font-medium text-ink/50">/year</span>
-          </p>
-          <Link to="/#contact" className="btn-dark mt-5 w-full">Add backup</Link>
-        </div>
-      </aside>
-    </div>
-  </section>
+    </section>
   )
 }
 

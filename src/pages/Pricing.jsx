@@ -20,7 +20,7 @@ const FAQS = [
   },
   {
     q: 'Can you connect biometric devices and lab machines?',
-    a: 'Yes. Advanced and Enterprise setups can connect biometric attendance devices, lab analysers, LIS, PACS, radiology workflows and third-party systems through standard or custom integrations.',
+    a: 'Yes. The 20–50 beds and 50+ beds plans connect biometric attendance devices and lab analysers. LIS, PACS, radiology and other third-party integrations beyond your plan are billed at ₹850 per hour, per person.',
   },
   {
     q: 'How are backups and deployment handled?',
@@ -35,8 +35,8 @@ const FAQS = [
     a: 'Supported workflows such as registration, billing and pharmacy keep working offline. Work is stored securely on the device and syncs automatically when the connection returns.',
   },
   {
-    q: 'Are prices inclusive of GST?',
-    a: 'No. Listed prices are annual and GST is charged extra.',
+    q: 'How does pricing work?',
+    a: 'You pay a one-time licence based on your bed count (₹80,000 under 20 beds, ₹1,25,000 for 20–50 beds, ₹2,00,000 above 50 beds), plus an annual maintenance charge (AMC) of 20% of the licence. GST is charged extra.',
   },
 ]
 
