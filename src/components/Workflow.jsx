@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { UserPlus, Stethoscope, FlaskConical, Pill, Receipt, Mic, Bot, IdCard, ClipboardList, Calendar, TestTube, Plug, FileText, Send, CheckCircle2, BedDouble, ClipboardCheck } from 'lucide-react'
+import { UserPlus, Stethoscope, FlaskConical, Pill, Receipt, IdCard, ClipboardList, Calendar, TestTube, Plug, FileText, Send, CheckCircle2, BedDouble, ClipboardCheck } from 'lucide-react'
 import SectionHeader from './SectionHeader'
 
 const WORKFLOWS = [
@@ -18,11 +18,11 @@ const WORKFLOWS = [
   {
     icon: Stethoscope,
     title: 'Doctor consultation',
-    desc: 'The doctor reviews history, dictates notes, checks an AI summary, and places prescriptions, tests, admission or OT orders.',
+    desc: 'The doctor reviews history, records the diagnosis and places prescriptions, tests, admission or OT orders.',
     screen: 'Doctor console: Ravi Kumar',
     items: [
-      { icon: Mic, label: 'Prescription dictated and auto-filled', badge: 'Voice' },
-      { icon: Bot, label: 'AI patient and prescription summary', badge: 'Reviewed' },
+      { icon: FileText, label: 'Diagnosis: hyperlipidaemia', badge: 'Recorded' },
+      { icon: ClipboardList, label: 'Prescription: 2 medicines, 30 days', badge: 'Signed' },
       { icon: TestTube, label: 'Lab order: lipid profile, blood sugar', badge: 'Sent to lab' },
       { icon: BedDouble, label: 'Admit to Ward C, bed 14', badge: 'Admitted' },
     ],
@@ -54,7 +54,7 @@ const WORKFLOWS = [
   {
     icon: Receipt,
     title: 'Billing and discharge',
-    desc: 'Charges consolidate, clearances complete, the NABH-aligned discharge summary is signed and the record is ready for ABDM sharing.',
+    desc: 'Charges consolidate, clearances complete, the discharge summary is signed and the record is ready for ABDM sharing.',
     screen: 'Billing, discharge and record sharing',
     items: [
       { icon: BedDouble, label: 'Room charges, Ward C, 3 days', badge: '₹4,500' },

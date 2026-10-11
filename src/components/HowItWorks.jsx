@@ -11,8 +11,8 @@ const STEPS = [
   },
   {
     icon: Stethoscope,
-    title: 'Consult with AI assistance',
-    desc: 'Doctors review the longitudinal record, dictate notes and prescriptions, use AI-assisted summaries, and place lab, radiology, admission or OT orders.',
+    title: 'Consult and order',
+    desc: 'Doctors review the longitudinal record, write prescriptions and place lab, radiology, admission or OT orders, all from one screen.',
   },
   {
     icon: Hospital,
@@ -22,7 +22,7 @@ const STEPS = [
   {
     icon: FileCheck2,
     title: 'Discharge, share and protect',
-    desc: 'Generate itemised bills and NABH-aligned discharge documents, sign records digitally, share through ABDM, and protect data with scheduled backups.',
+    desc: 'Generate itemised bills and discharge documents, settle insurance or PM-JAY cases, share records through ABDM, and protect data with scheduled backups.',
   },
 ]
 

@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
   CalendarClock, BedDouble, Stethoscope, HeartPulse, Pill, FlaskConical, ScanLine, Scissors, Receipt,
-  Package, Fingerprint, IdCard, Mic, ClipboardCheck, Settings2, Plug, CloudUpload, BarChart3, Check, PlayCircle,
+  Package, Fingerprint, IdCard, Mic, Landmark, Settings2, Plug, CloudUpload, BarChart3, Check,
 } from 'lucide-react'
 import SectionHeader from './SectionHeader'
 
@@ -73,9 +73,9 @@ export const MODULES = [
     includes: ['Voice-filled prescription fields', 'Real-time voice dictation', 'Medical speech-to-text', 'Structured clinical note formatting', 'Prescription and patient summaries', 'Clinical section parsing', 'Order extraction from dictated notes', 'Specialty template support'],
   },
   {
-    icon: ClipboardCheck, title: 'NABH workflows', fullTitle: 'NABH-aligned clinical documentation',
-    desc: 'Standardise documentation with assessments, checklists, medication records, digital signatures, audit trails and complete patient-file packets.',
-    includes: ['Configurable clinical templates', 'Doctor and nursing assessments', 'Medication and investigation records', 'OT and discharge checklists', 'Digital signatures and verification', 'Audit logs and document history', 'Complete patient-file PDF bundles'],
+    icon: Landmark, title: 'PM-JAY and schemes', fullTitle: 'Ayushman Bharat / PM-JAY and government schemes',
+    desc: 'Register scheme beneficiaries, bill against scheme packages and keep each Ayushman Bharat PM-JAY or state-scheme case documented and reportable.',
+    includes: ['Scheme beneficiary registration', 'PM-JAY and state-scheme support', 'Package-wise scheme billing', 'Pre-authorisation documents', 'Scheme case documentation', 'Claim status tracking', 'Scheme-wise reports'],
   },
   {
     icon: Settings2, title: 'Admin and access', fullTitle: 'Hospital administration and access control',
@@ -89,8 +89,8 @@ export const MODULES = [
   },
   {
     icon: CloudUpload, title: 'Backup and security', fullTitle: 'Cloud, on-premise, backup and security',
-    desc: 'Deploy in cloud, on-premise or hybrid environments with offline-ready workflows, scheduled backups, restore support, encryption and audit trails.',
-    includes: ['Cloud, on-premise and hybrid deployment', 'Offline-ready browser workflows', 'Scheduled cloud backups', 'Backup health and restore support', 'Role-based security and audit logs', 'Encrypted ABDM and clinical records', 'Deployment and continuity tooling'],
+    desc: 'Deploy in cloud, on-premise or hybrid environments with scheduled backups, restore support, encryption and audit trails.',
+    includes: ['Cloud, on-premise and hybrid deployment', 'Configurable backup retention', 'Scheduled cloud backups', 'Backup health and restore support', 'Role-based security and audit logs', 'Encrypted ABDM and clinical records', 'Deployment and continuity tooling'],
   },
   {
     icon: BarChart3, title: 'Reports and MIS', fullTitle: 'Reports, analytics and MIS',
@@ -206,9 +206,7 @@ const Modules = () => {
                 </ul>
 
                 <div className="mt-auto flex flex-col gap-4 pt-8 sm:flex-row sm:pt-10 sm:items-center sm:justify-between">
-                  <Link to="/#smart" className="inline-flex items-center gap-2 text-[14px] font-semibold text-pine-700 hover:text-pine-950">
-                    <PlayCircle size={18} className="text-marigold-600" aria-hidden="true" /> Watch the video guide
-                  </Link>
+                  <p className="text-[14px] text-ink/60">Shares the same record as every other module.</p>
                   <Link to="/#contact" className="btn-dark w-full sm:w-auto">Book a demo of this module</Link>
                 </div>
               </div>

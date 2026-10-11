@@ -1,13 +1,13 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
-  CalendarClock, BedDouble, HeartPulse, Mic, Sparkles, PlayCircle, IdCard, ClipboardCheck, Lock, Receipt, Pill,
-  BarChart3, WifiOff, Plug, CloudUpload, Check, ChevronLeft, ChevronRight, Users, ArrowRight,
+  CalendarClock, BedDouble, HeartPulse, IdCard, Landmark, Lock, Receipt, Pill, BarChart3, Plug, CloudUpload, Check,
+  ChevronLeft, ChevronRight, Users, ArrowRight,
 } from 'lucide-react'
 import SectionHeader from './SectionHeader'
 import RailHint from './RailHint'
 
-const CATEGORIES = ['Clinical care', 'Smart & AI', 'Compliance', 'Operations & finance', 'Platform']
+const CATEGORIES = ['Clinical care', 'Compliance & schemes', 'Operations & finance', 'Platform']
 
 const FEATURES = [
   {
@@ -29,51 +29,33 @@ const FEATURES = [
     roles: ['Nurse'],
   },
   {
-    cat: 'Smart & AI', icon: Mic, title: 'Voice-enabled prescriptions', short: 'Doctors speak. The prescription fills itself.',
-    desc: 'Doctors dictate in plain clinical language and Aushrit fills medicine, dose, frequency, duration and follow-up orders into the right fields, ready to review and sign.',
-    points: ['Medicine, dose, frequency and duration filled', 'Lab and follow-up orders extracted', 'Specialty template support', 'Doctor reviews before signing'],
-    roles: ['Doctor'],
-  },
-  {
-    cat: 'Smart & AI', icon: Sparkles, title: 'AI patient summaries', short: 'The full history, in a few lines.',
-    desc: 'AI reads visits, vitals, labs, prescriptions and allergies across the record and writes a short, structured summary, so clinicians walk in already briefed.',
-    points: ['Built from the longitudinal record', 'Allergies and critical values flagged', 'OPD, IPD and discharge summaries', 'Clinician reviews every summary'],
-    roles: ['Doctor', 'Nurse'],
-  },
-  {
-    cat: 'Smart & AI', icon: PlayCircle, title: 'Video guides for every module', short: 'Step-by-step videos for every role and screen.',
-    desc: 'Chapter-by-chapter video walkthroughs take each role through their screens, from registration to reports, so new staff learn on the job.',
-    points: ['Chapters for every module and role', 'Step captions to follow along', 'Open the guide from any screen', 'Faster onboarding and shift changes'],
-    roles: ['All staff'],
-  },
-  {
-    cat: 'Compliance', icon: IdCard, title: 'ABDM and ABHA, M1 to M3', short: 'Digital health IDs and consent-based record sharing.',
+    cat: 'Compliance & schemes', icon: IdCard, title: 'ABDM and ABHA, M1 to M3', short: 'Digital health IDs and consent-based record sharing.',
     desc: 'Create and link ABHA, support Scan & Share at the front desk, link care contexts as a HIP, package FHIR records and run consent-based HIU exchange.',
     points: ['ABHA creation, linking, card and QR', 'Facility Scan & Share', 'HIP care contexts and FHIR records', 'HIU consent-based exchange'],
     roles: ['Reception', 'Admin'],
   },
   {
-    cat: 'Compliance', icon: ClipboardCheck, title: 'NABH-aligned documentation', short: 'Assessments, checklists and signatures, audit-ready.',
-    desc: 'Standardise doctor and nursing assessments, medication records, OT safety and discharge checklists, digital signatures and complete patient-file bundles.',
-    points: ['Doctor and nursing assessments', 'OT safety and discharge checklists', 'Digital signatures and verification', 'Complete patient-file PDF bundles'],
-    roles: ['Doctor', 'Nurse', 'Admin'],
+    cat: 'Compliance & schemes', icon: Landmark, title: 'Ayushman Bharat / PM-JAY and govt schemes', short: 'Treat scheme patients and track every case.',
+    desc: 'Register Ayushman Bharat PM-JAY and other government-scheme patients, bill against scheme packages and keep every scheme case documented from admission to discharge.',
+    points: ['Scheme beneficiary details on the record', 'Package-wise scheme billing', 'Scheme case documentation', 'Scheme-wise reports'],
+    roles: ['Reception', 'Billing', 'Admin'],
   },
   {
-    cat: 'Compliance', icon: Lock, title: 'Role-based access and audit', short: 'Everyone sees exactly what their job needs.',
-    desc: 'Action-level permissions for every role, with signature checks, approval flows, audit logs and full document history.',
-    points: ['Role and action-level permissions', 'Audit logs and document history', 'Signature checks', 'Approval workflows'],
+    cat: 'Compliance & schemes', icon: Lock, title: 'Role-based access and audit', short: 'Everyone sees exactly what their job needs.',
+    desc: 'Action-level permissions for every role, with approval flows, audit logs and full document history.',
+    points: ['Role and action-level permissions', 'Audit logs and document history', 'Approval workflows', 'Secure staff sign-in'],
     roles: ['Admin'],
   },
   {
-    cat: 'Operations & finance', icon: Receipt, title: 'Unified billing and insurance', short: 'Every charge, from every department, on one bill.',
-    desc: 'Centralise OPD, IPD, pharmacy, lab, radiology and OT billing with advances, refunds, payers, pre-authorisation and claims tracking.',
-    points: ['One invoice across departments', 'Advances, refunds and discounts', 'TPA pre-authorisation and claims', 'Financial dashboards and exports'],
+    cat: 'Operations & finance', icon: Receipt, title: 'Unified billing', short: 'Every charge, from every department, on one bill.',
+    desc: 'Centralise OPD, IPD, pharmacy, lab, radiology and OT billing with advances, refunds, discounts, payer rate cards and daily collection reports.',
+    points: ['One invoice across departments', 'Advances, refunds and discounts', 'Payer and rate-card management', 'Collections and day-end reports'],
     roles: ['Reception', 'Admin'],
   },
   {
     cat: 'Operations & finance', icon: Pill, title: 'Pharmacy, lab and inventory', short: 'Orders flow straight to dispensing and testing.',
     desc: 'Prescriptions land in the pharmacy queue and lab orders in the worklist, while stock, batches, expiry and purchasing stay up to date on their own.',
-    points: ['Prescription queue and POS billing', 'Batch, expiry and low-stock alerts', 'Lab worklists with analyser results', 'Store, purchase orders and GRN'],
+    points: ['Prescription queue and POS billing', 'Batch, expiry and low-stock alerts', 'Lab worklists and verified reports', 'Store, purchase orders and GRN'],
     roles: ['Pharmacist', 'Lab technician', 'Store'],
   },
   {
@@ -83,16 +65,10 @@ const FEATURES = [
     roles: ['Admin'],
   },
   {
-    cat: 'Platform', icon: WifiOff, title: 'Offline-ready operations', short: 'The hospital keeps working when the internet drops.',
-    desc: 'Supported workflows keep running through connectivity problems. Work is stored securely on the device and syncs automatically once you are back online.',
-    points: ['Registration, billing and pharmacy keep running', 'Work stored securely on the device', 'Automatic sync on reconnect', 'Made for patchy connectivity'],
-    roles: ['All staff'],
-  },
-  {
-    cat: 'Platform', icon: Plug, title: 'Device and system integrations', short: 'Data arrives from machines, not from typing.',
-    desc: 'Connect lab analysers, biometric attendance devices, radiology and PACS workflows, LIS and third-party systems through configurable integrations.',
-    points: ['Lab analysers and machines', 'Biometric attendance devices', 'Radiology and PACS support', 'LIS and third-party APIs'],
-    roles: ['Lab technician', 'HR', 'Admin'],
+    cat: 'Platform', icon: Plug, title: 'Lab and system integrations', short: 'Results arrive from machines, not from typing.',
+    desc: 'Connect lab analysers, radiology and PACS workflows, LIS and third-party systems through configurable integrations and APIs.',
+    points: ['Lab analysers and machines', 'Radiology and PACS support', 'LIS and third-party APIs', 'SMS and notification services'],
+    roles: ['Lab technician', 'Admin'],
   },
   {
     cat: 'Platform', icon: CloudUpload, title: 'Cloud, on-premise and backups', short: 'Deploy your way, with your data protected.',
@@ -163,7 +139,7 @@ const Features = () => {
           align="center"
           eyebrow="Core features"
           title="The features that run your hospital"
-          lead="Fifteen capabilities that matter most, from the front desk to the boardroom. Pick one to see what it does and who uses it."
+          lead="The everyday capabilities every department relies on, from the front desk to the boardroom. Pick one to see what it does and who uses it."
         />
 
         {/* Category filter */}

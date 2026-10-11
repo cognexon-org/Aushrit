@@ -8,7 +8,7 @@ const STATS = [
 ]
 
 const StatsStrip = () => (
-  <section aria-label="Aushrit at a glance" className="bg-paper pb-16 sm:pb-24 lg:pb-28">
+  <section aria-label="Aushrit at a glance" className="bg-paper py-16 sm:py-24 lg:py-28">
     <div className="container-site">
       <dl className="relative grid grid-cols-2 overflow-hidden rounded-[24px] bg-gradient-to-br sm:rounded-[32px] from-marigold-400 to-marigold-600 lg:grid-cols-4">
         <div className="dot-paper pointer-events-none absolute inset-0 opacity-60" aria-hidden="true" />

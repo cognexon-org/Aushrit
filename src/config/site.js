@@ -28,7 +28,7 @@ export const TEAM = [
 // Primary navigation. Links with a hash scroll to a section on the home page.
 export const NAV_LINKS = [
   { label: 'How it works', to: '/#how' },
-  { label: 'AI & Voice', to: '/#smart' },
+  { label: 'Smart features', to: '/#smart' },
   { label: 'Modules', to: '/#modules' },
   { label: 'Features', to: '/#features' },
   { label: 'Roles', to: '/#roles' },

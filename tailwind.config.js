@@ -70,6 +70,10 @@ export default {
           '0%, 100%': { boxShadow: '0 0 0 0 rgba(242,163,58,.55)' },
           '50%': { boxShadow: '0 0 0 12px rgba(242,163,58,0)' },
         },
+        scan: {
+          '0%, 100%': { top: '10%' },
+          '50%': { top: '88%' },
+        },
         floaty: {
           '0%, 100%': { transform: 'translateY(0)' },
           '50%': { transform: 'translateY(-6px)' },
@@ -80,6 +84,7 @@ export default {
         shimmer: 'shimmer 1.6s linear infinite',
         'glow-pulse': 'glowPulse 1.6s ease-out infinite',
         floaty: 'floaty 4s ease-in-out infinite',
+        scan: 'scan 1.8s ease-in-out infinite',
         rise: 'rise .7s cubic-bezier(.2,.7,.2,1) both',
         'bed-in': 'bedIn .35s cubic-bezier(.2,.7,.2,1) both',
         wave: 'wave 1.1s ease-in-out infinite',

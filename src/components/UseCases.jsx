@@ -8,8 +8,8 @@ const USE_CASES = [
     icon: Hospital, title: 'Small and mid-size hospitals', subtitle: '50 to 200 beds',
     points: [
       'Digitise OPD, IPD, pharmacy, lab, billing and discharge without changing how your staff already work',
-      'Start with ABHA-enabled registration, NABH-aligned core records, role-based access and scheduled backups',
-      'Add voice-to-text, biometrics, OT, radiology or lab-machine integration when you need them',
+      'Start with ABHA-enabled registration, role-based access and scheduled backups',
+      'Add OT, radiology or lab-machine integration when you need them',
       'See bed occupancy, revenue, appointments, stock and patient history live',
     ],
   },
@@ -17,7 +17,7 @@ const USE_CASES = [
     icon: Building2, title: 'Multi-specialty hospitals', subtitle: '100+ beds with diagnostics',
     points: [
       'Doctors, nursing, OT, radiology, pathology, pharmacy, store, HR, insurance and finance on one record',
-      'AI assistance and voice-to-text for faster prescriptions, notes and summaries',
+      'Insurance and Ayushman Bharat / PM-JAY cases handled from the same record',
       'Biometric attendance, analyser integration, ABDM Scan & Share, HIP care contexts and FHIR exchange',
       'Standard assessments, checklists, digital signatures, audit trails and daily automated backups',
     ],
@@ -28,7 +28,7 @@ const USE_CASES = [
       'Central governance, reports, permissions and onboarding across branches',
       'Dedicated cloud, on-premise or hybrid deployment with your own backup and recovery policy',
       'Multiple biometric devices, lab machines, LIS, PACS and third-party systems through custom APIs',
-      'Full ABDM M1–M3, consent-based exchange, custom AI templates and enterprise audit retention',
+      'Full ABDM M1–M3, consent-based exchange and enterprise audit retention',
     ],
   },
 ]

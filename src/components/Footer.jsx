@@ -6,8 +6,8 @@ import { SITE } from '../config/site'
 
 const PRODUCT = [
   { label: 'All modules', to: '/#modules' },
-  { label: 'AI and ABDM', to: '/#advanced-capabilities' },
-  { label: 'Key features', to: '/#features' },
+  { label: 'Smart features', to: '/#smart' },
+  { label: 'Core features', to: '/#features' },
   { label: 'User roles', to: '/#roles' },
   { label: 'Pricing', to: '/pricing' },
   { label: 'Book a demo', to: '/#contact' },
@@ -15,9 +15,9 @@ const PRODUCT = [
 
 const CAPABILITIES = [
   { label: 'AI summaries and voice Rx', to: '/#smart' },
-  { label: 'Video guides', to: '/#smart' },
+  { label: 'Insurance-ready claims', to: '/#smart' },
   { label: 'ABDM and ABHA', to: '/#modules' },
-  { label: 'NABH workflows', to: '/#modules' },
+  { label: 'Ayushman Bharat / PM-JAY', to: '/#features' },
   { label: 'OPD, IPD and OT', to: '/#modules' },
   { label: 'Pharmacy and diagnostics', to: '/#modules' },
   { label: 'Integrations and backups', to: '/#modules' },
@@ -41,7 +41,7 @@ const Footer = () => (
         <div className="col-span-2 lg:col-span-1">
           <Logo className="h-14 sm:h-16 lg:h-[70px] w-auto max-w-[280px]" />
           <p className="mt-5 max-w-[34ch] text-[14.5px] leading-relaxed text-white/60">
-            Hospital ERP for India with ABDM-ready interoperability, NABH-aligned records, AI and voice
+            Hospital ERP for India with ABDM-ready interoperability, Ayushman Bharat / PM-JAY support, AI and voice
             assistance, connected devices and cloud or on-premise deployment.
           </p>
         </div>
