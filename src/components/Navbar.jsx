@@ -35,7 +35,7 @@ const Navbar = () => {
   }
 
   const linkClass = (to) =>
-    `rounded-full px-3.5 py-2 text-[14.5px] font-medium transition-colors ${
+    `whitespace-nowrap rounded-full px-2.5 py-2 text-[14px] font-medium transition-colors xl:px-3.5 xl:text-[14.5px] ${
       isActive(to) ? 'bg-white/10 text-white' : 'text-white/75 hover:text-white'
     }`
 
@@ -47,11 +47,11 @@ const Navbar = () => {
       }`}
     >
       <nav className="container-site flex h-[76px] sm:h-[82px] items-center justify-between" aria-label="Main">
-        <Link to="/" aria-label={`${SITE.name} home`} className="flex items-center">
-          <Logo className="h-12 sm:h-14 lg:h-[58px] w-auto max-w-[240px]" />
+        <Link to="/" aria-label={`${SITE.name} home`} className="flex shrink-0 items-center">
+          <Logo className="h-12 sm:h-14 lg:h-[50px] xl:h-[58px] w-auto max-w-[240px]" />
         </Link>
 
-        <ul className="hidden items-center gap-1 lg:flex">
+        <ul className="hidden items-center gap-0.5 lg:flex xl:gap-1">
           {NAV_LINKS.map((l) => (
             <li key={l.to}>
               <NavLink to={l.to} className={() => linkClass(l.to)}>
@@ -61,15 +61,26 @@ const Navbar = () => {
           ))}
         </ul>
 
-        <div className="hidden items-center gap-3 lg:flex">
-          <a href={SITE.phoneHref} className="hidden items-center gap-2 text-[14px] 2xl:flex text-white/70 hover:text-white">
-            <Phone size={15} aria-hidden="true" />
-            {SITE.phone}
+        <div className="hidden shrink-0 items-center gap-2 lg:flex xl:gap-2.5">
+          <a
+            href={SITE.phoneHref}
+            title={`Call ${SITE.phone}`}
+            aria-label={`Call ${SITE.phone}`}
+            className="hidden h-10 w-10 place-items-center rounded-full text-white/75 ring-1 ring-white/20 transition-colors hover:bg-white/10 hover:text-white xl:grid"
+          >
+            <Phone size={16} aria-hidden="true" />
           </a>
-          <a href={DEMO.url} target="_blank" rel="noopener" className="btn-ghost-dark !px-4 !py-2.5 text-[14px]">
-            <Play size={14} fill="currentColor" aria-hidden="true" /> Live demo
+          <a
+            href={DEMO.url}
+            target="_blank"
+            rel="noopener"
+            aria-label="Live demo"
+            className="btn-ghost-dark whitespace-nowrap !px-3 !py-2.5 text-[14px] xl:!px-4"
+          >
+            <Play size={14} fill="currentColor" aria-hidden="true" />
+            <span className="hidden xl:inline">Live demo</span>
           </a>
-          <Link to="/#contact" className="btn-primary !px-5 !py-2.5 text-[14px]">
+          <Link to="/#contact" className="btn-primary whitespace-nowrap !px-5 !py-2.5 text-[14px]">
             Book a demo
           </Link>
         </div>
