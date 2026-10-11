@@ -22,7 +22,7 @@ const STEPS = [
   {
     icon: FileCheck2,
     title: 'Discharge, share and protect',
-    desc: 'Generate itemised bills and discharge documents, settle insurance or PM-JAY cases, share records through ABDM, and protect data with scheduled backups.',
+    desc: 'Generate itemised bills and NABH-aligned discharge documents, settle insurance or Ayushman Bharat / PM-JAY cases, share records through ABDM, and protect data with scheduled backups.',
   },
 ]
 

@@ -35,9 +35,9 @@ const FEATURES = [
     roles: ['Reception', 'Admin'],
   },
   {
-    cat: 'Compliance & schemes', icon: Landmark, title: 'Ayushman Bharat / PM-JAY and govt schemes', short: 'Treat scheme patients and track every case.',
-    desc: 'Register Ayushman Bharat PM-JAY and other government-scheme patients, bill against scheme packages and keep every scheme case documented from admission to discharge.',
-    points: ['Scheme beneficiary details on the record', 'Package-wise scheme billing', 'Scheme case documentation', 'Scheme-wise reports'],
+    cat: 'Compliance & schemes', icon: Landmark, title: 'NABH and Ayushman Bharat / PM-JAY', short: 'Accreditation-ready records and scheme cases, together.',
+    desc: 'Keep NABH-aligned clinical records and run Ayushman Bharat PM-JAY and other government-scheme cases from the same patient file, documented from admission to discharge.',
+    points: ['NABH-aligned assessments and records', 'PM-JAY beneficiary details on the record', 'Package-wise scheme billing', 'NABH and scheme-wise reports'],
     roles: ['Reception', 'Billing', 'Admin'],
   },
   {

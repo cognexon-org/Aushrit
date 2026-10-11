@@ -54,7 +54,7 @@ const WORKFLOWS = [
   {
     icon: Receipt,
     title: 'Billing and discharge',
-    desc: 'Charges consolidate, clearances complete, the discharge summary is signed and the record is ready for ABDM sharing.',
+    desc: 'Charges consolidate, clearances complete, the NABH-aligned discharge summary is signed, insurance or PM-JAY documents are ready and the record is ready for ABDM sharing.',
     screen: 'Billing, discharge and record sharing',
     items: [
       { icon: BedDouble, label: 'Room charges, Ward C, 3 days', badge: '₹4,500' },

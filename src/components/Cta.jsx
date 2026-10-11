@@ -122,7 +122,7 @@ const Cta = ({ id = 'contact', isMiddleCTA = false }) => {
                   <h2 className="font-display text-[clamp(26px,3vw,38px)] font-bold">See Aushrit running on your hospital's workflow</h2>
                   <p className="mt-4 text-[16.5px] leading-relaxed text-white/70">
                     A 30-minute walkthrough with our product team covering the departments you run, ABHA and ABDM
-                    flows, smart documentation, insurance and PM-JAY claims, device integrations and backup options.
+                    flows, NABH and Ayushman Bharat / PM-JAY documentation, insurance claims, device integrations and backup options.
                   </p>
                   <ul className="mt-7 flex flex-wrap gap-2">
                     {[

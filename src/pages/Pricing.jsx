@@ -11,6 +11,10 @@ const FAQS = [
     a: 'Yes. Depending on the plan, you get ABHA creation and linking, QR support, Scan & Share, HIP care-context linking, FHIR health records and consent-based HIU workflows.',
   },
   {
+    q: `How does ${SITE.name} support NABH?`,
+    a: 'Through NABH-aligned digital documentation: structured doctor and nursing assessments, medication charts, OT safety checklists, discharge records, digital signatures, audit logs and complete patient-file packets.',
+  },
+  {
     q: `Does ${SITE.name} support Ayushman Bharat / PM-JAY?`,
     a: 'Yes. You can register Ayushman Bharat PM-JAY and other government-scheme patients, bill against scheme packages and prepare the documents each scheme case needs.',
   },
@@ -45,7 +49,7 @@ const Pricing = () => (
           Pay for the hospital you run, not the one you might become.
         </h1>
         <p className="mt-6 max-w-[62ch] animate-rise text-[17.5px] leading-relaxed text-white/70" style={{ animationDelay: '.1s' }}>
-          Start with connected OPD, then add IPD, ABDM M1 to M3, Ayushman Bharat / PM-JAY support, AI and voice,
+          Start with connected OPD, then add IPD, ABDM M1 to M3, NABH-aligned documentation, Ayushman Bharat / PM-JAY support, AI and voice,
           device integrations, multi-branch control and enterprise backup as you grow.
         </p>
       </div>
@@ -59,7 +63,7 @@ const Pricing = () => (
           <SectionHeader
             eyebrow="FAQ"
             title="Questions hospitals ask us"
-            lead="ABDM, PM-JAY, smart features, integrations, deployment, backups and upgrades."
+            lead="ABDM, NABH, PM-JAY, smart features, integrations, deployment, backups and upgrades."
           />
           <div className="mt-8 rounded-[24px] bg-paper p-6 ring-1 ring-pine-100">
             <p className="font-display text-[18px] font-bold text-pine-950">Still have a question?</p>

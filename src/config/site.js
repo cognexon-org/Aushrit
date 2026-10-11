@@ -6,12 +6,12 @@ export const SITE = {
   nameDevanagari: 'आश्रित',
   tagline: 'Hospital ERP',
   city: 'Kanpur, India',
-  phone: '+91 70072 13006',
-  phoneHref: 'tel:+917007213006',
+  phone: '+91 95111 09240',
+  phoneHref: 'tel:+919511109240',
   // WhatsApp enquiries: country code + number, digits only.
-  whatsapp: '917007213006',
+  whatsapp: '919511109240',
   whatsappMessage: "Hi Aushrit, I'd like to know more about your Hospital ERP.",
-  email: 'aushriterp@gmail.com',
+  email: 'admin@cognexon.in',
   year: new Date().getFullYear(),
 }
 

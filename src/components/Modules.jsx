@@ -73,9 +73,9 @@ export const MODULES = [
     includes: ['Voice-filled prescription fields', 'Real-time voice dictation', 'Medical speech-to-text', 'Structured clinical note formatting', 'Prescription and patient summaries', 'Clinical section parsing', 'Order extraction from dictated notes', 'Specialty template support'],
   },
   {
-    icon: Landmark, title: 'PM-JAY and schemes', fullTitle: 'Ayushman Bharat / PM-JAY and government schemes',
-    desc: 'Register scheme beneficiaries, bill against scheme packages and keep each Ayushman Bharat PM-JAY or state-scheme case documented and reportable.',
-    includes: ['Scheme beneficiary registration', 'PM-JAY and state-scheme support', 'Package-wise scheme billing', 'Pre-authorisation documents', 'Scheme case documentation', 'Claim status tracking', 'Scheme-wise reports'],
+    icon: Landmark, title: 'NABH and PM-JAY', fullTitle: 'NABH documentation and Ayushman Bharat / PM-JAY',
+    desc: 'Standardise NABH-aligned documentation and run Ayushman Bharat PM-JAY and state-scheme cases, from beneficiary registration and package billing to pre-authorisation and reports.',
+    includes: ['NABH-aligned clinical templates', 'Doctor and nursing assessments', 'OT and discharge checklists', 'PM-JAY beneficiary registration', 'Package-wise scheme billing', 'Pre-authorisation documents', 'NABH and scheme-wise reports'],
   },
   {
     icon: Settings2, title: 'Admin and access', fullTitle: 'Hospital administration and access control',

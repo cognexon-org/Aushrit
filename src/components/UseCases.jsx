@@ -8,7 +8,7 @@ const USE_CASES = [
     icon: Hospital, title: 'Small and mid-size hospitals', subtitle: '50 to 200 beds',
     points: [
       'Digitise OPD, IPD, pharmacy, lab, billing and discharge without changing how your staff already work',
-      'Start with ABHA-enabled registration, role-based access and scheduled backups',
+      'Start with ABHA-enabled registration, NABH-aligned core records, role-based access and scheduled backups',
       'Add OT, radiology or lab-machine integration when you need them',
       'See bed occupancy, revenue, appointments, stock and patient history live',
     ],

@@ -23,7 +23,7 @@ const Hero = () => (
         </h1>
         <p className="mt-6 max-w-[58ch] animate-rise text-[17.5px] leading-relaxed text-white/70" style={{ animationDelay: '.16s' }}>
           Aushrit connects OPD, IPD, OT, pharmacy, diagnostics, billing and staff on a single patient
-          record, with ABDM-ready workflows, Ayushman Bharat / PM-JAY support and voice-to-text notes for doctors.
+          record, with ABDM-ready workflows, NABH-aligned documentation, Ayushman Bharat / PM-JAY support and voice-to-text notes for doctors.
         </p>
         <div className="mt-9 flex animate-rise flex-col gap-3 sm:flex-row sm:flex-wrap" style={{ animationDelay: '.24s' }}>
           <Link to="/#contact" className="btn-primary w-full sm:w-auto">Book a free demo</Link>

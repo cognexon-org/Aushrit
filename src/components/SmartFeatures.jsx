@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import {
   Mic, Sparkles, Check, Stethoscope, FlaskConical, Pill, AlertTriangle, HeartPulse, Wand2, ShieldCheck, Send,
-  ClipboardCheck, Fingerprint, PenLine, KeyRound, Stamp, FileCheck2, FileText, Smartphone, IdCard, QrCode,
+  Landmark, Fingerprint, PenLine, KeyRound, Stamp, FileCheck2, FileText, Smartphone, IdCard, QrCode,
   // Also needed if the video guide is restored: PlayCircle, Pause, Play, UserPlus, BedDouble, Receipt, BarChart3, MousePointer2, Captions
 } from 'lucide-react'
 import SectionHeader from './SectionHeader'
@@ -425,14 +425,14 @@ const MiniFrame = ({ title, badge, children }) => (
   </div>
 )
 
-const NABH_ITEMS = ['Initial assessment', 'Medication chart', 'OT safety checklist', 'Discharge summary']
-const NabhVisual = ({ running }) => {
-  const t = useTicker(NABH_ITEMS.length + 3, 700, running)
-  const done = Math.min(t, NABH_ITEMS.length)
+const SCHEME_ITEMS = ['NABH initial assessment', 'OT safety checklist', 'PM-JAY pre-authorisation', 'Discharge summary']
+const SchemeVisual = ({ running }) => {
+  const t = useTicker(SCHEME_ITEMS.length + 3, 700, running)
+  const done = Math.min(t, SCHEME_ITEMS.length)
   return (
-    <MiniFrame title="Patient file · NABH checklist" badge={<span className="shrink-0 text-[10.5px] font-bold text-pine-600">{done}/{NABH_ITEMS.length}</span>}>
+    <MiniFrame title="NABH and PM-JAY file · Ravi Kumar" badge={<span className="shrink-0 text-[10.5px] font-bold text-pine-600">{done}/{SCHEME_ITEMS.length}</span>}>
       <ul className="space-y-1.5">
-        {NABH_ITEMS.map((it, i) => (
+        {SCHEME_ITEMS.map((it, i) => (
           <li key={it} className="flex items-center gap-2 text-[12px]">
             <span className={`grid h-4 w-4 place-items-center rounded transition-colors duration-300 ${i < done ? 'bg-pine-700 text-white' : 'ring-1 ring-pine-200'}`}>
               {i < done && <Check size={10} strokeWidth={3.5} />}
@@ -442,7 +442,7 @@ const NabhVisual = ({ running }) => {
         ))}
       </ul>
       <span className="absolute inset-x-3.5 bottom-3.5 h-1.5 overflow-hidden rounded-full bg-pine-50">
-        <span className="block h-full rounded-full bg-marigold-500 transition-all duration-500" style={{ width: `${(done / NABH_ITEMS.length) * 100}%` }} />
+        <span className="block h-full rounded-full bg-marigold-500 transition-all duration-500" style={{ width: `${(done / SCHEME_ITEMS.length) * 100}%` }} />
       </span>
     </MiniFrame>
   )
@@ -599,9 +599,9 @@ const ClaimVisual = ({ running }) => {
 
 const SHOWCASE = [
   {
-    icon: ClipboardCheck, title: 'NABH smart documentation', Visual: NabhVisual,
-    desc: 'Assessments, medication charts, safety checklists and discharge records are captured in NABH-aligned formats as staff work, with an audit trail on every entry.',
-    tags: ['Structured templates', 'Checklist tracking', 'Audit trail'],
+    icon: Landmark, title: 'NABH and Ayushman Bharat / PM-JAY smart documentation', Visual: SchemeVisual,
+    desc: 'Assessments, safety checklists and discharge records are captured in NABH-aligned formats as staff work, and Ayushman Bharat PM-JAY case files, from beneficiary verification to pre-authorisation, build themselves alongside.',
+    tags: ['NABH-aligned formats', 'PM-JAY case files', 'Audit trail'],
   },
   {
     icon: Fingerprint, title: 'Biometric device integration', Visual: BiometricVisual,
