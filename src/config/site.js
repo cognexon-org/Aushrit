@@ -35,3 +35,25 @@ export const NAV_LINKS = [
   { label: 'Pricing', to: '/pricing' },
   { label: 'About', to: '/about' },
 ]
+
+// Live demo: the real ERP prototype in backend-free demo mode, built into public/demo (npm run demo:build).
+// Links are full page loads (plain <a>), not router links, because the demo is a separate app.
+export const demoLink = (role, path) => `/demo${path}?role=${role}`
+
+export const DEMO = {
+  url: demoLink('admin', '/dashboard/admin'),
+  patientPortal: { url: '/demo/patient/login', mobile: '9876501234', otp: '123456' },
+  roles: [
+    { role: 'admin', label: 'Hospital admin', path: '/dashboard/admin' },
+    { role: 'staff', label: 'Front desk', path: '/dashboard/staff' },
+    { role: 'doctor', label: 'Doctor', path: '/dashboard/doctor' },
+    { role: 'nurse', label: 'Nurse', path: '/dashboard/nurse' },
+    { role: 'pharmacy', label: 'Pharmacy', path: '/dashboard/pharmacy' },
+    { role: 'pathology_staff', label: 'Pathology lab', path: '/dashboard/pathology' },
+    { role: 'radiology_staff', label: 'Radiology', path: '/dashboard/radiology' },
+    { role: 'ot_staff', label: 'Operation theatre', path: '/dashboard/ot' },
+    { role: 'accountant', label: 'Finance', path: '/dashboard/finance' },
+    { role: 'hr', label: 'HR', path: '/dashboard/hr' },
+    { role: 'store', label: 'Central store', path: '/dashboard/store' },
+  ],
+}

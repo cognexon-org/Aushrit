@@ -1,6 +1,6 @@
 import React, { useEffect, useId, useState } from 'react'
-import { Phone, CheckCircle2, AlertCircle, Loader2, X, CalendarCheck, Clock, Stethoscope, ShieldCheck } from 'lucide-react'
-import { API_URL, SITE } from '../config/site'
+import { Phone, CheckCircle2, AlertCircle, Loader2, X, CalendarCheck, Clock, Stethoscope, ShieldCheck, Play } from 'lucide-react'
+import { API_URL, SITE, DEMO } from '../config/site'
 
 const EMPTY = { name: '', hospitalName: '', city: '', pincode: '', whatsapp: '' }
 
@@ -175,6 +175,15 @@ const Cta = ({ id = 'contact', isMiddleCTA = false }) => {
                 </li>
               ))}
             </ol>
+            <a
+              href={DEMO.url}
+              target="_blank"
+              rel="noopener"
+              className="group mt-9 inline-flex items-center gap-2 text-[15px] font-semibold text-marigold-300 hover:text-marigold-400"
+            >
+              <Play size={15} fill="currentColor" aria-hidden="true" /> Prefer to explore first? Try the live demo
+              <span className="transition-transform group-hover:translate-x-0.5" aria-hidden="true">→</span>
+            </a>
           </div>
           <div className="rounded-[28px] bg-white/[0.05] p-5 shadow-[0_40px_80px_-40px_rgba(0,0,0,.6)] ring-1 ring-white/10 backdrop-blur sm:p-9">
             <h3 className="mb-6 text-[20px] font-bold">Request your free demo</h3>

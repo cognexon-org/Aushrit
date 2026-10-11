@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
-import { Menu, X, Phone, ChevronRight } from 'lucide-react'
+import { Menu, X, Phone, ChevronRight, Play } from 'lucide-react'
 import Logo from './Logo'
-import { NAV_LINKS, SITE } from '../config/site'
+import { NAV_LINKS, SITE, DEMO } from '../config/site'
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false)
@@ -62,9 +62,12 @@ const Navbar = () => {
         </ul>
 
         <div className="hidden items-center gap-3 lg:flex">
-          <a href={SITE.phoneHref} className="hidden items-center gap-2 text-[14px] xl:flex text-white/70 hover:text-white">
+          <a href={SITE.phoneHref} className="hidden items-center gap-2 text-[14px] 2xl:flex text-white/70 hover:text-white">
             <Phone size={15} aria-hidden="true" />
             {SITE.phone}
+          </a>
+          <a href={DEMO.url} target="_blank" rel="noopener" className="btn-ghost-dark !px-4 !py-2.5 text-[14px]">
+            <Play size={14} fill="currentColor" aria-hidden="true" /> Live demo
           </a>
           <Link to="/#contact" className="btn-primary !px-5 !py-2.5 text-[14px]">
             Book a demo
@@ -111,6 +114,9 @@ const Navbar = () => {
         ))}
         <li className="mt-6 flex flex-col gap-3 px-1">
           <Link to="/#contact" onClick={() => setOpen(false)} className="btn-primary w-full">Book a demo</Link>
+          <a href={DEMO.url} target="_blank" rel="noopener" onClick={() => setOpen(false)} className="btn-ghost-dark w-full">
+            <Play size={15} fill="currentColor" aria-hidden="true" /> Try the live demo
+          </a>
           <a href={SITE.phoneHref} className="btn-ghost-dark w-full">
             <Phone size={16} aria-hidden="true" /> Call {SITE.phone}
           </a>

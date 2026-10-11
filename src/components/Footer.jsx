@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { MapPin, Phone, Mail } from 'lucide-react'
 import Logo from './Logo'
-import { SITE } from '../config/site'
+import { SITE, DEMO } from '../config/site'
 
 const PRODUCT = [
   { label: 'All modules', to: '/#modules' },
@@ -11,6 +11,7 @@ const PRODUCT = [
   { label: 'User roles', to: '/#roles' },
   { label: 'Pricing', to: '/pricing' },
   { label: 'Book a demo', to: '/#contact' },
+  { label: 'Live demo', href: DEMO.url },
 ]
 
 const CAPABILITIES = [
@@ -49,7 +50,13 @@ const Footer = () => (
         <nav aria-label="Product">
           <h2 className={headCls}>Product</h2>
           <ul className="space-y-2.5">
-            {PRODUCT.map((l) => <li key={l.label}><Link to={l.to} className={linkCls}>{l.label}</Link></li>)}
+            {PRODUCT.map((l) => (
+              <li key={l.label}>
+                {l.href
+                  ? <a href={l.href} target="_blank" rel="noopener" className={linkCls}>{l.label}</a>
+                  : <Link to={l.to} className={linkCls}>{l.label}</Link>}
+              </li>
+            ))}
           </ul>
         </nav>
 

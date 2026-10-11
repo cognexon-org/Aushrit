@@ -4,6 +4,7 @@ import HowItWorks from '../components/HowItWorks'
 import SmartFeatures from '../components/SmartFeatures'
 import Roles from '../components/Roles'
 import Modules from '../components/Modules'
+import LiveDemo from '../components/LiveDemo'
 import Cta from '../components/Cta'
 import Workflow from '../components/Workflow'
 import Features from '../components/Features'
@@ -18,6 +19,7 @@ const Home = () => (
     <SmartFeatures />
     <Roles />
     <Modules />
+    <LiveDemo />
     <Cta isMiddleCTA id="demo" />
     <Workflow />
     <Features />

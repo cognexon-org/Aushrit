@@ -1,0 +1,10 @@
+{
+  "name": "Aushrit Hospital Information System",
+  "short_name": "Aushrit HIMS",
+  "description": "Hospital administration and clinical workflow application",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#155e75"
+}
