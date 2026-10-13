@@ -36,24 +36,31 @@ export const NAV_LINKS = [
   { label: 'About', to: '/about' },
 ]
 
-// Live demo: the real ERP prototype in backend-free demo mode, built into public/demo (npm run demo:build).
-// Links are full page loads (plain <a>), not router links, because the demo is a separate app.
-export const demoLink = (role, path) => `/demo${path}?role=${role}`
+// WhatsApp chat link with a pre-typed message.
+export const whatsappLink = (message) => `https://wa.me/${SITE.whatsapp}?text=${encodeURIComponent(message)}`
+
+// Live demo is shared on request: visitors message us on WhatsApp and we reply with the demo link.
+// The prototype itself (public/demo, built with npm run demo:build) is not linked anywhere on the site.
+const demoMessage = (workspace) =>
+  workspace
+    ? `Hello Aushrit team, I would like to request a live demo of the Aushrit Hospital ERP, specifically the ${workspace} workspace. Kindly share the demo link. Thank you.`
+    : 'Hello Aushrit team, I would like to request a live demo of the Aushrit Hospital ERP. Kindly share the demo link. Thank you.'
 
 export const DEMO = {
-  url: demoLink('admin', '/dashboard/admin'),
-  patientPortal: { url: '/demo/patient/login', mobile: '9876501234', otp: '123456' },
+  request: whatsappLink(demoMessage()),
+  requestFor: (workspace) => whatsappLink(demoMessage(workspace)),
   roles: [
-    { role: 'admin', label: 'Hospital admin', path: '/dashboard/admin' },
-    { role: 'staff', label: 'Front desk', path: '/dashboard/staff' },
-    { role: 'doctor', label: 'Doctor', path: '/dashboard/doctor' },
-    { role: 'nurse', label: 'Nurse', path: '/dashboard/nurse' },
-    { role: 'pharmacy', label: 'Pharmacy', path: '/dashboard/pharmacy' },
-    { role: 'pathology_staff', label: 'Pathology lab', path: '/dashboard/pathology' },
-    { role: 'radiology_staff', label: 'Radiology', path: '/dashboard/radiology' },
-    { role: 'ot_staff', label: 'Operation theatre', path: '/dashboard/ot' },
-    { role: 'accountant', label: 'Finance', path: '/dashboard/finance' },
-    { role: 'hr', label: 'HR', path: '/dashboard/hr' },
-    { role: 'store', label: 'Central store', path: '/dashboard/store' },
+    { role: 'admin', label: 'Hospital admin' },
+    { role: 'staff', label: 'Front desk' },
+    { role: 'doctor', label: 'Doctor' },
+    { role: 'nurse', label: 'Nurse' },
+    { role: 'pharmacy', label: 'Pharmacy' },
+    { role: 'pathology_staff', label: 'Pathology lab' },
+    { role: 'radiology_staff', label: 'Radiology' },
+    { role: 'ot_staff', label: 'Operation theatre' },
+    { role: 'accountant', label: 'Finance' },
+    { role: 'hr', label: 'HR' },
+    { role: 'store', label: 'Central store' },
+    { role: 'patient', label: 'Patient portal' },
   ],
 }

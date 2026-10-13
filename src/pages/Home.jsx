@@ -20,7 +20,8 @@ const Home = () => (
     <Roles />
     <Modules />
     <LiveDemo />
-    <Cta isMiddleCTA id="demo" />
+    {/* Mid-page "Free demo" form box: hidden for now. Uncomment to bring it back. */}
+    {/* <Cta isMiddleCTA id="demo" /> */}
     <Workflow />
     <Features />
     <StatsStrip />

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
-import { Menu, X, Phone, ChevronRight, Play } from 'lucide-react'
+import { Menu, X, Phone, ChevronRight } from 'lucide-react'
+import WhatsAppIcon from './WhatsAppIcon'
 import Logo from './Logo'
 import { NAV_LINKS, SITE, DEMO } from '../config/site'
 
@@ -71,13 +72,14 @@ const Navbar = () => {
             <Phone size={16} aria-hidden="true" />
           </a>
           <a
-            href={DEMO.url}
+            href={DEMO.request}
             target="_blank"
-            rel="noopener"
-            aria-label="Live demo"
+            rel="noopener noreferrer"
+            aria-label="Request the live demo on WhatsApp"
+            title="Request the live demo on WhatsApp"
             className="btn-ghost-dark whitespace-nowrap !px-3 !py-2.5 text-[14px] xl:!px-4"
           >
-            <Play size={14} fill="currentColor" aria-hidden="true" />
+            <WhatsAppIcon size={16} className="text-[#25D366]" />
             <span className="hidden xl:inline">Live demo</span>
           </a>
           <Link to="/#contact" className="btn-primary whitespace-nowrap !px-5 !py-2.5 text-[14px]">
@@ -125,8 +127,8 @@ const Navbar = () => {
         ))}
         <li className="mt-6 flex flex-col gap-3 px-1">
           <Link to="/#contact" onClick={() => setOpen(false)} className="btn-primary w-full">Book a demo</Link>
-          <a href={DEMO.url} target="_blank" rel="noopener" onClick={() => setOpen(false)} className="btn-ghost-dark w-full">
-            <Play size={15} fill="currentColor" aria-hidden="true" /> Try the live demo
+          <a href={DEMO.request} target="_blank" rel="noopener noreferrer" onClick={() => setOpen(false)} className="btn-ghost-dark w-full">
+            <WhatsAppIcon size={17} className="text-[#25D366]" /> Get the live demo on WhatsApp
           </a>
           <a href={SITE.phoneHref} className="btn-ghost-dark w-full">
             <Phone size={16} aria-hidden="true" /> Call {SITE.phone}

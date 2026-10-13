@@ -1,5 +1,6 @@
 import React, { useEffect, useId, useState } from 'react'
-import { Phone, CheckCircle2, AlertCircle, Loader2, X, CalendarCheck, Clock, Stethoscope, ShieldCheck, Play } from 'lucide-react'
+import { Phone, CheckCircle2, AlertCircle, Loader2, X, CalendarCheck, Clock, Stethoscope, ShieldCheck } from 'lucide-react'
+import WhatsAppIcon from './WhatsAppIcon'
 import { API_URL, SITE, DEMO } from '../config/site'
 
 const EMPTY = { name: '', hospitalName: '', city: '', pincode: '', whatsapp: '' }
@@ -176,12 +177,12 @@ const Cta = ({ id = 'contact', isMiddleCTA = false }) => {
               ))}
             </ol>
             <a
-              href={DEMO.url}
+              href={DEMO.request}
               target="_blank"
-              rel="noopener"
+              rel="noopener noreferrer"
               className="group mt-9 inline-flex items-center gap-2 text-[15px] font-semibold text-marigold-300 hover:text-marigold-400"
             >
-              <Play size={15} fill="currentColor" aria-hidden="true" /> Prefer to explore first? Try the live demo
+              <WhatsAppIcon size={17} className="text-[#25D366]" /> Prefer to explore first? Get the live demo on WhatsApp
               <span className="transition-transform group-hover:translate-x-0.5" aria-hidden="true">→</span>
             </a>
           </div>

@@ -11,7 +11,7 @@ const PRODUCT = [
   { label: 'User roles', to: '/#roles' },
   { label: 'Pricing', to: '/pricing' },
   { label: 'Book a demo', to: '/#contact' },
-  { label: 'Live demo', href: DEMO.url },
+  { label: 'Live demo (WhatsApp)', href: DEMO.request },
 ]
 
 const CAPABILITIES = [
@@ -53,7 +53,7 @@ const Footer = () => (
             {PRODUCT.map((l) => (
               <li key={l.label}>
                 {l.href
-                  ? <a href={l.href} target="_blank" rel="noopener" className={linkCls}>{l.label}</a>
+                  ? <a href={l.href} target="_blank" rel="noopener noreferrer" className={linkCls}>{l.label}</a>
                   : <Link to={l.to} className={linkCls}>{l.label}</Link>}
               </li>
             ))}
